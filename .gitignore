@@ -1,0 +1,13 @@
+*.a
+*.o
+*.exe
+**/bin
+**/obj
+*.depend
+*.layout
+**/build_temp
+*.config
+!default.config
+**/lib
+**/libs
+!**/extlibs
