@@ -10,5 +10,6 @@
 !default.config
 **/lib
 **/libs
+**/build
 !**/extlibs
 !**/extlibs/**

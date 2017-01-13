@@ -1,3 +1,0 @@
-/home/jason/repos/lib-git/CMakeFiles/CMakeTmp/CMakeFiles/edit_cache.dir
-/home/jason/repos/lib-git/CMakeFiles/CMakeTmp/CMakeFiles/rebuild_cache.dir
-/home/jason/repos/lib-git/CMakeFiles/CMakeTmp/CMakeFiles/cmTC_2d7f5.dir

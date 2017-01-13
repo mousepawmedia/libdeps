@@ -1,33 +1,38 @@
-none:
+none: help
+
+help:
 	@echo "=== Third-Party Libraries ==="
 	@echo "Select a build target:"
-	@echo "  make all"
-	@echo "  make cpgf"
-	@echo "  make eigen"
-	@echo "  make pugixml"
-	@echo "  make sfml"
+	@echo "  make all						Build everything."
 	@echo
-	@echo "  make clean_all"
-	@echo "  make clean_cpgf"
-	@echo "  make clean_eigen"
-	@echo "  make clean_pugixml"
-	@echo "  make clean_sfml"
+	@echo "  make cpgf						Build CPGF."
+	@echo "  make eigen						Build Eigen."
+	@echo "  make opus						Build Opus."
+	@echo "  make pugixml					Build pugixml."
+	@echo "  make sfml						Build SFML."
 	@echo
-	@echo "  make ubuntu-depends-sfml"
+	@echo "  make clean_all					Clean everything."
+	@echo "  make clean_cpgf				Clean CPGF only."
+	@echo "  make clean_eigen				Clean Eigen only."
+	@echo "  make clean_opus				Clean Opus only."
+	@echo "  make clean_pugixml				Clean pugixml only."
+	@echo "  make clean_sfml				Clean SFML only."
 	@echo
-	@echo "Optional Architecture"
-	@echo "  ARCH=32	Make x86 build (-m32)"
-	@echo "  ARCH=64	Make x64 build (-m64)"
-	@echo
-	@echo "Use Configuration File"
-	@echo "  CONFIG=foo      Uses the configuration file 'foo.config'"
-	@echo "                  in the root of this repository."
-	@echo "  When unspecified, default.config will be used."
+	@echo "  make ubuntu-depends-sfml		Install Ubuntu's dependencies for SFML."
 	@echo
 	@echo "For other build options, see the 'make' command in 'cpgf/', 'eigan/', 'pugixml/', and 'sfml/'."
 
-clean_all: clean_cpgf clean_eigen
+all: cpgf eigen opus pugixml sfml
+	@echo "-------------"
+	@echo "<<<<<<< BUILD COMPLETE >>>>>>>"
+	@echo "All headers are in 'libs/include' and static libraries in 'libs/lib'."
+	@echo "-------------"
+
+clean_all: clean_cpgf clean_eigen clean_opus clean_pugixml clean_sfml
 	@rm -rf libs/
+	@echo "-------------"
+	@echo "<<<<<<< CLEAN COMPLETE: ALL >>>>>>>"
+	@echo "-------------"
 
 clean_cpgf:
 	$(MAKE) clean -C cpgf/build
@@ -43,6 +48,22 @@ clean_eigen:
 	@echo "<<<<<<< CLEAN COMPLETE: EIGEN >>>>>>>"
 	@echo "-------------"
 
+clean_opus:
+	$(MAKE) clean -C opus
+	@rm -rf libs/include/opus
+	@rm -f libs/lib/libopus*
+	@echo "-------------"
+	@echo "<<<<<<< CLEAN COMPLETE: OPUS >>>>>>>"
+	@echo "-------------"
+
+clean_pugixml:
+	@rm -rf pugixml/build
+	@rm -rf libs/include/pugixml
+	@rm -f libs/lib/libpugixml*
+	@echo "-------------"
+	@echo "<<<<<<< CLEAN COMPLETE: PUGIXML >>>>>>>"
+	@echo "-------------"
+
 clean_sfml:
 	$(MAKE) clean -C sfml
 	@rm -rf libs/include/SFML
@@ -54,7 +75,7 @@ cpgf:
 	@echo "Copying CPGF..."
 	@mkdir -p libs/lib
 	@cp -r cpgf/include libs/
-	@cp cpgf/lib libs/
+	@cp -r cpgf/lib libs/
 	@echo "-------------"
 	@echo "<<<<<<< BUILD COMPLETE: CPGF >>>>>>>"
 	@echo "CPGF is in 'libs/include/cpgf' and 'libs/lib'."
@@ -71,6 +92,33 @@ eigen:
 	@echo "WARNING: You do NOT need to run 'make install'. Just link directly to the above directory."
 	@echo "-------------"
 
+opus:
+	@echo "Building opus..."
+	@cd opus && ./configure
+	$(MAKE) -C opus
+	@echo "Copying opus..."
+	@mkdir -p libs/include/opus
+	@cp opus/include/* libs/include/opus
+	@cp opus/.libs/libopus* libs/lib
+	@echo "-------------"
+	@echo "<<<<<<< BUILD COMPLETE: OPUS >>>>>>>"
+	@echo "Opus is in 'libs/include/opus' and 'libs/lib'."
+	@echo "-------------"
+
+pugixml:
+	@echo "Building pugixml..."
+	@mkdir -p pugixml/build
+	@cd pugixml/build && cmake ../
+	$(MAKE) -C pugixml/build
+	@echo "Copying pugixml..."
+	@mkdir -p libs/include/pugixml
+	@cp pugixml/src/*.hpp libs/include/pugixml
+	@cp pugixml/build/libpugixml* libs/lib
+	@echo "-------------"
+	@echo "<<<<<<< BUILD COMPLETE: PUGIXML >>>>>>>"
+	@echo "SFML is in 'libs/include/pugixml' and 'libs/lib'."
+	@echo "-------------"
+
 sfml:
 	@echo "Building SFML..."
 	@cmake sfml -DBUILD_SHARED_LIBS:BOOL=FALSE
@@ -80,11 +128,10 @@ sfml:
 	@cp -r sfml/lib libs/
 	@echo "-------------"
 	@echo "<<<<<<< BUILD COMPLETE: SFML >>>>>>>"
-	@echo "SFML is in 'libs/include/sfml' and 'libs/lib'."
+	@echo "pugixml is in 'libs/include/SFML' and 'libs/lib'."
 	@echo "-------------"
-
 
 ubuntu-depends-sfml:
 	@sh preconfig/ubuntu-depends-sfml.sh
 
-.PHONY: all clean_all clean_eigan clean_sfml cpgf eigen sfml ubuntu-depends-sfml
+.PHONY: all clean_all clean_eigan clean_opus clean_pugixml clean_sfml cpgf eigen opus pugixml sfml ubuntu-depends-sfml
