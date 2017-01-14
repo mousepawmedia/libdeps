@@ -1,6 +1,0 @@
-/home/jason/Code/Repositories/lib-git/cpgf/build/temp_cache_linux/CMakeFiles/edit_cache.dir
-/home/jason/Code/Repositories/lib-git/cpgf/build/temp_cache_linux/CMakeFiles/rebuild_cache.dir
-/home/jason/Code/Repositories/lib-git/cpgf/build/temp_cache_linux/CMakeFiles/lib.dir
-/home/jason/Code/Repositories/lib-git/cpgf/build/temp_cache_linux/CMakeFiles/samplereflection.dir
-/home/jason/Code/Repositories/lib-git/cpgf/build/temp_cache_linux/CMakeFiles/sampleserialization.dir
-/home/jason/Code/Repositories/lib-git/cpgf/build/temp_cache_linux/CMakeFiles/tutorials.dir

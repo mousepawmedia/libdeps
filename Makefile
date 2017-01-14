@@ -66,6 +66,10 @@ clean_pugixml:
 
 clean_sfml:
 	$(MAKE) clean -C sfml
+	@rm -rf sfml/CMakeFiles
+	@rm -f sfml/CMakeCache.txt
+	@rm -f sfml/cmake_install.cmake
+	@rm -rf sfml/lib
 	@rm -rf libs/include/SFML
 	@rm -f libs/lib/libsfml*
 
@@ -121,7 +125,7 @@ pugixml:
 
 sfml:
 	@echo "Building SFML..."
-	@cmake sfml -DBUILD_SHARED_LIBS:BOOL=FALSE
+	@cd sfml; cmake sfml -DBUILD_SHARED_LIBS:BOOL=FALSE
 	$(MAKE) -C sfml
 	@echo "Copying SFML..."
 	@cp -r sfml/include libs/
