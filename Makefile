@@ -3,22 +3,22 @@ none: help
 help:
 	@echo "=== Third-Party Libraries ==="
 	@echo "Select a build target:"
-	@echo "  make all						Build everything."
+	@echo "  make all                    Build everything."
 	@echo
-	@echo "  make cpgf						Build CPGF."
-	@echo "  make eigen						Build Eigen."
-	@echo "  make opus						Build Opus."
-	@echo "  make pugixml					Build pugixml."
-	@echo "  make sfml						Build SFML."
+	@echo "  make cpgf                   Build CPGF."
+	@echo "  make eigen                  Build Eigen."
+	@echo "  make opus                   Build Opus."
+	@echo "  make pugixml                Build pugixml."
+	@echo "  make sfml                   Build SFML."
 	@echo
-	@echo "  make clean_all					Clean everything."
-	@echo "  make clean_cpgf				Clean CPGF only."
-	@echo "  make clean_eigen				Clean Eigen only."
-	@echo "  make clean_opus				Clean Opus only."
-	@echo "  make clean_pugixml				Clean pugixml only."
-	@echo "  make clean_sfml				Clean SFML only."
+	@echo "  make clean_all              Clean everything."
+	@echo "  make clean_cpgf             Clean CPGF only."
+	@echo "  make clean_eigen            Clean Eigen only."
+	@echo "  make clean_opus             Clean Opus only."
+	@echo "  make clean_pugixml          Clean pugixml only."
+	@echo "  make clean_sfml             Clean SFML only."
 	@echo
-	@echo "  make ubuntu-depends-sfml		Install Ubuntu's dependencies for SFML."
+	@echo "  make ubuntu-depends-sfml    Install Ubuntu's dependencies for SFML."
 	@echo
 	@echo "For other build options, see the 'make' command in 'cpgf/', 'eigan/', 'pugixml/', and 'sfml/'."
 
@@ -120,7 +120,7 @@ pugixml:
 	@cp pugixml/build/libpugixml* libs/lib
 	@echo "-------------"
 	@echo "<<<<<<< BUILD COMPLETE: PUGIXML >>>>>>>"
-	@echo "SFML is in 'libs/include/pugixml' and 'libs/lib'."
+	@echo "pugixml is in 'libs/include/pugixml' and 'libs/lib'."
 	@echo "-------------"
 
 sfml:
@@ -132,7 +132,7 @@ sfml:
 	@cp -r sfml/lib libs/
 	@echo "-------------"
 	@echo "<<<<<<< BUILD COMPLETE: SFML >>>>>>>"
-	@echo "pugixml is in 'libs/include/SFML' and 'libs/lib'."
+	@echo "SFML is in 'libs/include/SFML' and 'libs/lib'."
 	@echo "-------------"
 
 ubuntu-depends-sfml:
