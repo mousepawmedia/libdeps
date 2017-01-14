@@ -9,26 +9,24 @@ help:
 	@echo "  make eigen                  Build Eigen."
 	@echo "  make opus                   Build Opus."
 	@echo "  make pugixml                Build pugixml."
-	@echo "  make sfml                   Build SFML."
 	@echo
 	@echo "  make clean_all              Clean everything."
 	@echo "  make clean_cpgf             Clean CPGF only."
 	@echo "  make clean_eigen            Clean Eigen only."
 	@echo "  make clean_opus             Clean Opus only."
 	@echo "  make clean_pugixml          Clean pugixml only."
-	@echo "  make clean_sfml             Clean SFML only."
 	@echo
-	@echo "  make ubuntu-depends-sfml    Install Ubuntu's dependencies for SFML."
+	@echo "  make ubuntu-fix-aclocal     Fix Opus's complaints about problems with aclocal."
 	@echo
 	@echo "For other build options, see the 'make' command in 'cpgf/', 'eigan/', 'pugixml/', and 'sfml/'."
 
-all: cpgf eigen opus pugixml sfml
+all: cpgf eigen opus pugixml
 	@echo "-------------"
 	@echo "<<<<<<< BUILD COMPLETE >>>>>>>"
 	@echo "All headers are in 'libs/include' and static libraries in 'libs/lib'."
 	@echo "-------------"
 
-clean_all: clean_cpgf clean_eigen clean_opus clean_pugixml clean_sfml
+clean_all: clean_cpgf clean_eigen clean_opus clean_pugixml
 	@rm -rf libs/
 	@echo "-------------"
 	@echo "<<<<<<< CLEAN COMPLETE: ALL >>>>>>>"
@@ -63,15 +61,6 @@ clean_pugixml:
 	@echo "-------------"
 	@echo "<<<<<<< CLEAN COMPLETE: PUGIXML >>>>>>>"
 	@echo "-------------"
-
-clean_sfml:
-	$(MAKE) clean -C sfml
-	@rm -rf sfml/CMakeFiles
-	@rm -f sfml/CMakeCache.txt
-	@rm -f sfml/cmake_install.cmake
-	@rm -rf sfml/lib
-	@rm -rf libs/include/SFML
-	@rm -f libs/lib/libsfml*
 
 cpgf:
 	@echo "Building CPGF..."
@@ -123,19 +112,7 @@ pugixml:
 	@echo "pugixml is in 'libs/include/pugixml' and 'libs/lib'."
 	@echo "-------------"
 
-sfml:
-	@echo "Building SFML..."
-	@cd sfml; cmake . -DBUILD_SHARED_LIBS:BOOL=FALSE
-	$(MAKE) -C sfml
-	@echo "Copying SFML..."
-	@cp -r sfml/include libs/
-	@cp -r sfml/lib libs/
-	@echo "-------------"
-	@echo "<<<<<<< BUILD COMPLETE: SFML >>>>>>>"
-	@echo "SFML is in 'libs/include/SFML' and 'libs/lib'."
-	@echo "-------------"
+ubuntu-fix-aclocal:
+	@sh preconfig/ubuntu-fix-aclocal.sh 
 
-ubuntu-depends-sfml:
-	@sh preconfig/ubuntu-depends-sfml.sh
-
-.PHONY: all clean_all clean_eigan clean_opus clean_pugixml clean_sfml cpgf eigen opus pugixml sfml ubuntu-depends-sfml
+.PHONY: all clean_all clean_eigan clean_opus clean_pugixml cpgf eigen opus pugixml ubuntu-fix-aclocal
