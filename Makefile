@@ -18,6 +18,7 @@ help:
 	@echo "  make clean_pugixml          Clean pugixml only."
 	@echo "  make clean_sfml             Clean SFML only."
 	@echo
+	@echo "  make ubuntu-fix-aclocal     Fix Opus's complaints about problems with aclocal."
 	@echo "  make ubuntu-depends-sfml    Install Ubuntu's dependencies for SFML."
 	@echo
 	@echo "For other build options, see the 'make' command in 'cpgf/', 'eigan/', 'pugixml/', and 'sfml/'."
