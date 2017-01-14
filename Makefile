@@ -125,7 +125,7 @@ pugixml:
 
 sfml:
 	@echo "Building SFML..."
-	@cd sfml; cmake sfml -DBUILD_SHARED_LIBS:BOOL=FALSE
+	@cd sfml; cmake . -DBUILD_SHARED_LIBS:BOOL=FALSE
 	$(MAKE) -C sfml
 	@echo "Copying SFML..."
 	@cp -r sfml/include libs/
