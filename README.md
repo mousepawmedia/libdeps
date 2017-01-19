@@ -29,34 +29,16 @@ See those folders for READMEs, licenses, and additional information.
  - [Eigen][5] (License: MPL2; compiled without LGPL sectors.)
  - [libopus][6] (License: BSD-3, some royalty-free patents)
  - [pugixml][7] (License: MIT)
- - [SFML][8]: (License: zlib/png)
 
 See CHANGELOG.md for exact library versions.
 
 ## Dependencies
 
-On Linux, SFML has a few additional dependencies. The development headers for these packages
-must be installed on the system before compiling SFML.
+The included libraries have no special dependencies, except for CMake and the C++ standard library.
+Just build and go!
 
-If you're on a Debian-based system, you can run the `preconfig/ubuntu-depends-sfml.sh` script
-to install all of the dependencies via apt.
-
- - freetype
- - jpeg
- - x11
- - xrandr
- - xcb
- - x11-xcb
- - xcb-randr
- - xcb-image
- - opengl
- - flac
- - ogg
- - vorbis
- - vorbisenc
- - vorbisfile
- - openal
- - pthread
+Opus may require `autoconf` and `libtool` for some configuration. Run `make ubuntu-fix-aclocal`
+to resolve any build issues it may have.
 
 ## Contributions
 
@@ -81,4 +63,3 @@ The project is owned and maintained by [MousePaw Games][1].
 [5]: http://eigen.tuxfamily.org/
 [6]: https://opus-codec.org/
 [7]: http://pugixml.org/
-[8]: http://www.sfml-dev.org/

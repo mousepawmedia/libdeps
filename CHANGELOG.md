@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 2016-01-12
+## 2016-01-18
 
 All library versions are the most recent stable release as of this update.
 
@@ -11,5 +11,3 @@ All library versions are the most recent stable release as of this update.
 * Opus 1.1.3 (2016-07-15): From source tarball.
 
 * pugixml 1.8 (2016-11-24): From source tarball.
-
-* SFML 2.4.1 (2016-10-21): From source tarball.

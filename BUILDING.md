@@ -26,9 +26,3 @@ Alternatively, you can run `$ make <library>` to build an individual library.
 If you're using the master build system, it will automatically copy all headers
 and compiled library files into the `libs` directory. After compiling, you can point
 your compiler and linker directly to `libs/include` and `libs/lib`.
-
-## SFML Dependencies
-
-On Linux, SFML has a number of dependencies. These are listed in the main README.md. For your
-convenience, on many Debian-based systems, you can just run `$ make ubuntu-depends-sfml` to install
-the dependencies via apt. (These are based on the Ubuntu 16.04 package names.)

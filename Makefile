@@ -3,7 +3,7 @@ none: help
 help:
 	@echo "=== Third-Party Libraries ==="
 	@echo "Select a build target:"
-	@echo "  make all                    Build everything."
+	@echo "  make ready                  Build everything."
 	@echo
 	@echo "  make cpgf                   Build CPGF."
 	@echo "  make eigen                  Build Eigen."
@@ -20,7 +20,9 @@ help:
 	@echo
 	@echo "For other build options, see the 'make' command in 'cpgf/', 'eigan/', 'pugixml/', and 'sfml/'."
 
-all: cpgf eigen opus pugixml
+all: ready
+
+ready: cpgf eigen opus pugixml
 	@echo "-------------"
 	@echo "<<<<<<< BUILD COMPLETE >>>>>>>"
 	@echo "All headers are in 'libs/include' and static libraries in 'libs/lib'."
@@ -68,6 +70,7 @@ cpgf:
 	@echo "Copying CPGF..."
 	@mkdir -p libs/lib
 	@cp -r cpgf/include libs/
+	@mkdir -p libs/lib
 	@cp -r cpgf/lib libs/
 	@echo "-------------"
 	@echo "<<<<<<< BUILD COMPLETE: CPGF >>>>>>>"
@@ -92,6 +95,7 @@ opus:
 	@echo "Copying opus..."
 	@mkdir -p libs/include/opus
 	@cp opus/include/* libs/include/opus
+	@mkdir -p libs/lib
 	@cp opus/.libs/libopus* libs/lib
 	@echo "-------------"
 	@echo "<<<<<<< BUILD COMPLETE: OPUS >>>>>>>"
@@ -106,6 +110,7 @@ pugixml:
 	@echo "Copying pugixml..."
 	@mkdir -p libs/include/pugixml
 	@cp pugixml/src/*.hpp libs/include/pugixml
+	@mkdir -p libs/lib
 	@cp pugixml/build/libpugixml* libs/lib
 	@echo "-------------"
 	@echo "<<<<<<< BUILD COMPLETE: PUGIXML >>>>>>>"
@@ -113,6 +118,6 @@ pugixml:
 	@echo "-------------"
 
 ubuntu-fix-aclocal:
-	@sh preconfig/ubuntu-fix-aclocal.sh 
+	@sh preconfig/ubuntu-fix-aclocal.sh
 
 .PHONY: all clean_all clean_eigan clean_opus clean_pugixml cpgf eigen opus pugixml ubuntu-fix-aclocal
