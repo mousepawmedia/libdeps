@@ -18,7 +18,7 @@ help:
 	@echo
 	@echo "  make ubuntu-fix-aclocal     Fix Opus's complaints about problems with aclocal."
 	@echo
-	@echo "For other build options, see the 'make' command in 'cpgf/', 'eigan/', 'pugixml/', and 'sfml/'."
+	@echo "For other build options, see the 'make' command in 'cpgf/', 'eigan/', 'opus/', and 'pugixml/'."
 
 all: ready
 

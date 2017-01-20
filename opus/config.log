@@ -596,6 +596,7 @@ config.status:1161: creating celt/arm/armopts.s
 config.status:1161: creating doc/Makefile
 config.status:1161: creating doc/Doxyfile
 config.status:1161: creating config.h
+config.status:1342: config.h is unchanged
 config.status:1390: executing depfiles commands
 config.status:1390: executing libtool commands
 configure:17055:

@@ -5,6 +5,7 @@
 **/.deps
 *.Plo
 .dirstamp
+config.log
 doc/html/
 doc/latex/
 doc/man/
