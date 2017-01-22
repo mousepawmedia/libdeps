@@ -78,14 +78,13 @@ cpgf:
 	@echo "-------------"
 
 eigen:
-	@echo "Building and Copying Eigen..."
+	@echo "Copying Eigen..."
 	@mkdir -p libs/include/Eigen
-	@cd libs/include/Eigen && cmake ../../../eigen -DEIGEN_MPL2_ONLY=true
+	@cp -r eigen/Eigen libs/include
 	@echo "-------------"
 	@echo "<<<<<<< BUILD COMPLETE: EIGEN >>>>>>>"
 	@echo "Compiled with EIGEN_MPL2_ONLY flag."
 	@echo "Eigen is in 'libs/include/eigen'."
-	@echo "WARNING: You do NOT need to run 'make install'. Just link directly to the above directory."
 	@echo "-------------"
 
 opus:
