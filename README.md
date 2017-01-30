@@ -27,9 +27,8 @@ See those folders for READMEs, licenses, and additional information.
 
  - [CPGF][4] (License: Apache 2.0)
  - [Eigen][5] (License: MPL2; compiled without LGPL sectors.)
- - [LLVM][7] (License: University of Illinois/NCSA Open Source License)
  - [Opus][6] (License: BSD-3, some royalty-free patents)
- - [pugixml][8] (License: MIT)
+ - [pugixml][7] (License: MIT)
 
 See CHANGELOG.md for exact library versions.
 
@@ -63,5 +62,4 @@ The project is owned and maintained by [MousePaw Games][1].
 [4]: http://www.cpgf.org/
 [5]: http://eigen.tuxfamily.org/
 [6]: https://opus-codec.org/
-[7]: http://llvm.org/
-[8]: http://pugixml.org/
+[7]: http://pugixml.org/
