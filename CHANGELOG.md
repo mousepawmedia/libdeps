@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 2017-01-21
+## 1.0.0 [2017-01-21]
 
 All library versions are the most recent stable release as of this update.
 
