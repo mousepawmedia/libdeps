@@ -57,8 +57,8 @@ of our original work in this repository is licensed under the BSD-3 License. (Se
 The project is owned and maintained by [MousePaw Media][1].
 
 [1]: https://www.mousepawmedia.com/
-[2]: https://www.mousepawmedia.com/developers
-[3]: https://www.mousepawmedia.com/developers/contributing
+[2]: https://www.mousepawmedia.com/developers/contributing
+[3]: https://www.mousepawmedia.com/termsofdevelopment
 [4]: http://www.cpgf.org/
 [5]: http://eigen.tuxfamily.org/
 [6]: https://opus-codec.org/
