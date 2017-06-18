@@ -541,7 +541,7 @@ protected:
 GPP_REPEAT_2(CB_MAX_ARITY, CB_DEF_LIST_N, GPP_EMPTY)
 
 template <int arity, typename FT, template<typename> class ConnectionT, template<typename T, typename = std::allocator<T> > class ListType>
-/* MOUSEPAW GAMES: Clang says this is used as a struct, not a class.
+/* MOUSEPAW MEDIA: Clang says this is used as a struct, not a class.
  * Probable, so we'll go with that. */
 ////class GCallbackListFunctionTraits;
 struct GCallbackListFunctionTraits;

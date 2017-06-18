@@ -186,7 +186,7 @@ struct SizeOfCallbackBase {
 };
 
 struct SizeOfCallbackSon : public SizeOfCallbackBase {
-    /* MOUSEPAW GAMES: The contents of this function don't actually do anyting, but cause
+    /* MOUSEPAW MEDIA: The contents of this function don't actually do anyting, but cause
      * Clang to complain about infinite recursion. Let's just define an empty function. */
     ////virtual void a(int) { (void)a(0); }
     virtual void a(int) { }

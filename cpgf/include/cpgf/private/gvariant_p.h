@@ -514,7 +514,7 @@ template <typename T>
 T castFromString(char * /*s*/, typename GDisableIfResult<CheckIsConvertibleToCharPointer<T> >::Result * = 0)
 {
 	raiseCoreException(Error_Variant_FailCast);
-    /* MOUSEPAW GAMES: This code is apparently trying to cause compiler error, but it's
+    /* MOUSEPAW MEDIA: This code is apparently trying to cause compiler error, but it's
      * platform specific. If we're on GCC/Clang, use that standard equivalent instead. */
     #ifdef G_COMPILER_GCC
     __builtin_unreachable();
@@ -539,7 +539,7 @@ template <typename T>
 T castFromWideString(wchar_t * /*s*/, typename GDisableIfResult<CheckIsConvertibleToWideCharPointer<T> >::Result * = 0)
 {
 	raiseCoreException(Error_Variant_FailCast);
-    /* MOUSEPAW GAMES: This code is apparently trying to cause compiler error, but it's
+    /* MOUSEPAW MEDIA: This code is apparently trying to cause compiler error, but it's
      * platform specific. Let's use the GCC/Clang standard equivalent instead. */
     ////return *(typename RemoveReference<T>::Result *)(0);
     __builtin_unreachable();

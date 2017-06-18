@@ -311,7 +311,7 @@ namespace _internal {
 
 		GWiseIteratorRetainer(const GWiseIteratorRetainer &other)
         {
-            /* MOUSEPAW GAMES: This is an empty function, and the other param
+            /* MOUSEPAW MEDIA: This is an empty function, and the other param
              * is never used. Let's do the following to shut the compiler warning up.
              */
             (void)other;

@@ -1,4 +1,4 @@
-# MousePaw Games: Third-Party Libraries
+# MousePaw Media: Third-Party Libraries
 
 Many of our libraries rely on common third-party library dependencies. To minimize the effort
 necessary to download, build, and maintain these dependencies, we maintain this repository.
@@ -10,13 +10,13 @@ See BUILDING.md for more information on how to get started.
 
 ## Authors
 
-MousePaw Games is responsible for the master build system, the preconfig scripts, and some
+MousePaw Media is responsible for the master build system, the preconfig scripts, and some
 modifications to library build systems.
 
 Otherwise, all credit for the libraries goes to their respective developers. See their respective
 READMEs, websites, and documentation for more information.
 
-MousePaw Games' part of this repository was authored by...
+MousePaw Media' part of this repository was authored by...
 
 - Jason C. McDonald
 
@@ -47,18 +47,18 @@ If you would like to contribute code, please read our
 [Contribution Guide][2].
 
 All contributions are licensed to us under the
-[MousePaw Games Terms of Development][3].
+[MousePaw Media Terms of Development][3].
 
 ## License
 
 All changes made to library build systems is licensed under the library's own license. The rest
 of our original work in this repository is licensed under the BSD-3 License. (See LICENSE.md)
 
-The project is owned and maintained by [MousePaw Games][1].
+The project is owned and maintained by [MousePaw Media][1].
 
-[1]: http://www.mousepawgames.com/
-[2]: http://www.mousepawgames.com/opensource#contribute
-[3]: http://www.mousepawgames.com/termsofdevelopment
+[1]: https://www.mousepawmedia.com/
+[2]: https://www.mousepawmedia.com/developers
+[3]: https://www.mousepawmedia.com/developers/contributing
 [4]: http://www.cpgf.org/
 [5]: http://eigen.tuxfamily.org/
 [6]: https://opus-codec.org/
