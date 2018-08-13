@@ -78,9 +78,9 @@ cpgf:
 	$(MAKE) linux -C cpgf/build
 	$(ECHO) "Copying CPGF..."
 	$(MK_DIR) libs/lib
-	$(CP_DIR) cpgf/include libs/
+	$(CP_DIR) cpgf/include/ libs/include/
 	$(MK_DIR) libs/lib
-	$(CP_DIR) cpgf/lib libs/
+	$(CP_DIR) cpgf/lib/ libs/lib/
 	$(ECHO) "-------------"
 	$(ECHO) "<<<<<<< BUILD COMPLETE: CPGF >>>>>>>"
 	$(ECHO) "CPGF is in 'libs/include/cpgf' and 'libs/lib'."
@@ -88,8 +88,8 @@ cpgf:
 
 eigen:
 	$(ECHO) "Copying Eigen..."
-	$(MK_DIR) libs/include/Eigen
-	$(CP_DIR) eigen/Eigen libs/include
+	$(MK_DIR) libs/include
+	$(CP_DIR) eigen/Eigen/ libs/include/Eigen/
 	$(ECHO) "-------------"
 	$(ECHO) "<<<<<<< BUILD COMPLETE: EIGEN >>>>>>>"
 	$(ECHO) "Compiled with EIGEN_MPL2_ONLY flag."
@@ -98,7 +98,7 @@ eigen:
 
 opus:
 	$(ECHO) "Building opus..."
-	$(CH_DIR) opus && ./configure
+	$(CH_DIR) opus ./configure
 	$(MAKE) -C opus
 	$(ECHO) "Copying opus..."
 	$(MK_DIR) libs/include/opus
@@ -113,7 +113,7 @@ opus:
 pugixml:
 	$(ECHO) "Building pugixml..."
 	$(MK_DIR) pugixml/build
-	$(CH_DIR) pugixml/build && cmake ../
+	$(CH_DIR) pugixml/build cmake ../
 	$(MAKE) -C pugixml/build
 	$(ECHO) "Copying pugixml..."
 	$(MK_DIR) libs/include/pugixml
@@ -128,4 +128,4 @@ pugixml:
 ubuntu-fix-aclocal:
 	@sh preconfig/ubuntu-fix-aclocal.sh
 
-.PHONY: all clean_all clean_eigan clean_opus clean_pugixml cpgf eigen opus pugixml ubuntu-fix-aclocal
+.PHONY: all clean_all clean_eigen clean_opus clean_pugixml cpgf eigen opus pugixml ubuntu-fix-aclocal

@@ -123,15 +123,15 @@ am__can_run_installinfo = \
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 am__DIST_COMMON = $(srcdir)/Doxyfile.in $(srcdir)/Makefile.in TODO
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/jason/repos/lib-git/opus/missing aclocal-1.15
+ACLOCAL = ${SHELL} /home/jason/Code/Repositories/libdeps/opus/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 0
 AR = ar
 ARM2GNU_PARAMS = 
 ARM_NEON_INTR_CFLAGS = -mfpu=neon
-AUTOCONF = ${SHELL} /home/jason/repos/lib-git/opus/missing autoconf
-AUTOHEADER = ${SHELL} /home/jason/repos/lib-git/opus/missing autoheader
-AUTOMAKE = ${SHELL} /home/jason/repos/lib-git/opus/missing automake-1.15
+AUTOCONF = ${SHELL} /home/jason/Code/Repositories/libdeps/opus/missing autoconf
+AUTOHEADER = ${SHELL} /home/jason/Code/Repositories/libdeps/opus/missing autoheader
+AUTOMAKE = ${SHELL} /home/jason/Code/Repositories/libdeps/opus/missing automake-1.15
 AWK = gawk
 CC = gcc
 CCAS = gcc
@@ -155,14 +155,14 @@ EXEEXT =
 FGREP = /bin/grep -F
 GREP = /bin/grep
 HAVE_ARM_NE10 = 
-HAVE_DOXYGEN = yes
+HAVE_DOXYGEN = no
 HAVE_PERL = 
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
-LD = /usr/bin/ld -m elf_x86_64
+LD = /usr/bin/x86_64-linux-gnu-ld -m elf_x86_64
 LDFLAGS = 
 LIBM = -lm
 LIBOBJS = 
@@ -173,7 +173,7 @@ LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
 MAINT = 
-MAKEINFO = ${SHELL} /home/jason/repos/lib-git/opus/missing makeinfo
+MAKEINFO = ${SHELL} /home/jason/Code/Repositories/libdeps/opus/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NE10_CFLAGS = 
@@ -215,10 +215,10 @@ X86_AVX_CFLAGS = -mavx
 X86_SSE2_CFLAGS = -msse2
 X86_SSE4_1_CFLAGS = -msse4.1
 X86_SSE_CFLAGS = -msse
-abs_builddir = /home/jason/repos/lib-git/opus/doc
-abs_srcdir = /home/jason/repos/lib-git/opus/doc
-abs_top_builddir = /home/jason/repos/lib-git/opus
-abs_top_srcdir = /home/jason/repos/lib-git/opus
+abs_builddir = /home/jason/Code/Repositories/libdeps/opus/doc
+abs_srcdir = /home/jason/Code/Repositories/libdeps/opus/doc
+abs_top_builddir = /home/jason/Code/Repositories/libdeps/opus
+abs_top_srcdir = /home/jason/Code/Repositories/libdeps/opus
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_DUMPBIN = 
@@ -247,7 +247,7 @@ host_vendor = unknown
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/jason/repos/lib-git/opus/install-sh
+install_sh = ${SHELL} /home/jason/Code/Repositories/libdeps/opus/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -358,7 +358,7 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-#all-local:
+all-local:
 all-am: Makefile all-local
 installdirs:
 install: install-am
@@ -391,9 +391,9 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-#install-data-local:
-#clean-local:
-#uninstall-local:
+install-data-local:
+clean-local:
+uninstall-local:
 clean: clean-am
 
 clean-am: clean-generic clean-libtool clean-local mostlyclean-am
@@ -478,32 +478,32 @@ uninstall-am: uninstall-local
 .PRECIOUS: Makefile
 
 
-all-local: doxygen-build.stamp
+#all-local: doxygen-build.stamp
 
-doxygen-build.stamp: Doxyfile $(DOCINPUTS)
-	doxygen
-	touch $@
+#doxygen-build.stamp: Doxyfile $(DOCINPUTS)
+#	doxygen
+#	touch $@
 
-install-data-local:
-	$(INSTALL) -d $(DESTDIR)$(docdir)/html/search
-	for f in `find html -type f \! -name "installdox"`; do	\
-		$(INSTALL_DATA) $$f $(DESTDIR)$(docdir)/$$f;	\
-	done
+#install-data-local:
+#	$(INSTALL) -d $(DESTDIR)$(docdir)/html/search
+#	for f in `find html -type f \! -name "installdox"`; do	\
+#		$(INSTALL_DATA) $$f $(DESTDIR)$(docdir)/$$f;	\
+#	done
 
-	$(INSTALL) -d $(DESTDIR)$(mandir)/man3
-	cd man && find man3 -type f -name opus_*.3 \
-		  -exec $(INSTALL_DATA) \{} $(DESTDIR)$(mandir)/man3 \;
+#	$(INSTALL) -d $(DESTDIR)$(mandir)/man3
+#	cd man && find man3 -type f -name opus_*.3 \
+#		  -exec $(INSTALL_DATA) \{} $(DESTDIR)$(mandir)/man3 \;
 
-clean-local:
-	$(RM) -r html
-	$(RM) -r latex
-	$(RM) -r man
-	$(RM) doxygen-build.stamp
-	$(RM) doxygen_sqlite3.db
+#clean-local:
+#	$(RM) -r html
+#	$(RM) -r latex
+#	$(RM) -r man
+#	$(RM) doxygen-build.stamp
+#	$(RM) doxygen_sqlite3.db
 
-uninstall-local:
-	$(RM) -r $(DESTDIR)$(docdir)/html
-	$(RM) $(DESTDIR)$(mandir)/man3/opus_*.3 $(DESTDIR)$(mandir)/man3/opus.h.3
+#uninstall-local:
+#	$(RM) -r $(DESTDIR)$(docdir)/html
+#	$(RM) $(DESTDIR)$(mandir)/man3/opus_*.3 $(DESTDIR)$(mandir)/man3/opus.h.3
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
