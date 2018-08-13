@@ -11,6 +11,8 @@
 **/lib
 **/libs
 **/build
+**/temp*
+!**/cpgf/build
 !**/extlibs
 !**/extlibs/**
 codealike.json
