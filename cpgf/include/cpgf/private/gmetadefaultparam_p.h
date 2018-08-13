@@ -1,5 +1,5 @@
-#ifndef __GMETADEFAULTPARAM_P_H
-#define __GMETADEFAULTPARAM_P_H
+#ifndef CPGF_GMETADEFAULTPARAM_P_H
+#define CPGF_GMETADEFAULTPARAM_P_H
 
 #include "cpgf/gscopedptr.h"
 
@@ -22,8 +22,17 @@ public:
 	const GVariant & getDefault(size_t index);
 	size_t getDefaultCount() const;
 
-	size_t loadDefaultParams(const GVariant ** paramBuffer, size_t passedParamCount,
-		size_t prototypeParamCount);
+	size_t loadDefaultParams(
+		const GVariant ** paramBuffer,
+		size_t passedParamCount,
+		size_t prototypeParamCount
+	);
+
+	size_t loadDefaultParamsByData(
+		const GVariantData ** paramDataBuffer,
+		size_t passedParamCount,
+		size_t prototypeParamCount
+	);
 
 private:
 	DefaultValueList defaultValueList;

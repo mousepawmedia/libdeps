@@ -183,7 +183,7 @@ public class DoxygenXmlParser {
 		}
 		else if(kind.equals("union")) {
 			// we can't handle union for now because union will cause compile error in type traits
-///			this.doParseClass(node, location);
+			this.doParseClass(node, location);
 		}
 		else if(kind.equals("struct")) {
 			this.doParseClass(node, location);
@@ -289,6 +289,11 @@ public class DoxygenXmlParser {
 	}
 
 	private Item doParseMethod(Node node, String name) {
+		String argsString = Util.getNodeText(Util.getNode(node, "argsstring"));
+		if(argsString.endsWith("=delete")) { // deleted function
+			return null;
+		}
+		
 		if(! this.getCurrentClass().isGlobal()) {
 			if(name.indexOf('~') >= 0 && ! name.matches("operator\\s*~")) {
 				Destructor destructor = new Destructor();
@@ -313,6 +318,12 @@ public class DoxygenXmlParser {
 
 		if(matcher.matches()) { // operator
 			String op = matcher.group(1);
+			
+			// don't reflect new/delete
+			if(op.indexOf("new") >= 0 || op.indexOf("delete") >= 0) {
+				return null;
+			}
+
 			Operator operator = new Operator(
 					op, 
 					new CppType(this.metaInfo.getTypeSolver(), Util.getNodeText(Util.getNode(node, "type")))
@@ -405,7 +416,7 @@ public class DoxygenXmlParser {
 		
 		Node bitFieldNode = Util.getNode(node, "bitfield");
 		if(bitFieldNode != null) {
-			field.setBitField(Integer.parseInt(Util.getNodeText(bitFieldNode)));
+			field.setBitField(Integer.parseInt(Util.getNodeText(bitFieldNode).trim()));
 		}
 
 		this.getCurrentClass().getFieldList().add(field);

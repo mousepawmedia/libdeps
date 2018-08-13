@@ -13,3 +13,4 @@
 **/build
 !**/extlibs
 !**/extlibs/**
+codealike.json

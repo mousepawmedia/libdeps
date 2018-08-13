@@ -85,12 +85,12 @@ SimpleObject * getSharedSimpleObject(cpgf::GSharedPointer<SimpleObject> sp)
 	return sp.get();
 }
 
-CPP11_SP createCpp11SharedSimpleObject()
+std::shared_ptr<SimpleObject> createCpp11SharedSimpleObject()
 {
-	return CPP11_SP(new SimpleObject);
+	return std::shared_ptr<SimpleObject>(new SimpleObject);
 }
 
-SimpleObject * getCpp11SharedSimpleObject(CPP11_SP sp)
+SimpleObject * getCpp11SharedSimpleObject(std::shared_ptr<SimpleObject> sp)
 {
 	return sp.get();
 }
@@ -114,3 +114,16 @@ int getSimpleObjectN(const SimpleObject & object)
 {
 	return object.data.n;
 }
+
+SimpleObject* storedCopy = NULL;
+
+void setViaConstRefPtrApi(SimpleObject * const &input)
+{
+    storedCopy = input;
+}
+
+SimpleObject* &returnFromConstRefPtrApi()
+{
+    return storedCopy;
+}
+

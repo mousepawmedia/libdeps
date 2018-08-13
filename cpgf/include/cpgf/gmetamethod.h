@@ -1,5 +1,5 @@
-#ifndef __GMETAMETHOD_H
-#define __GMETAMETHOD_H
+#ifndef CPGF_GMETAMETHOD_H
+#define CPGF_GMETAMETHOD_H
 
 #include "cpgf/private/gmetamethod_p.h"
 
@@ -49,6 +49,7 @@ public:
 	virtual bool isExplicitThis() const;
 
 	virtual GVariant execute(void * instance, const GVariant * params, size_t paramCount) const;
+	virtual GVariant executeByData(void * instance, const GVariantData * * params, size_t paramCount) const;
 
 	virtual bool checkParam(const GVariant & param, size_t paramIndex) const;
 
@@ -120,6 +121,7 @@ public:
 	virtual bool isExplicitThis() const;
 
 	virtual GVariant execute(void * instance, const GVariant * params, size_t paramCount) const;
+	virtual GVariant executeByData(void * instance, const GVariantData * * params, size_t paramCount) const;
 
 	virtual bool checkParam(const GVariant & param, size_t paramIndex) const;
 

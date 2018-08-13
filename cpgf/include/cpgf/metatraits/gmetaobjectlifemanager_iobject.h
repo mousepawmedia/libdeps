@@ -1,10 +1,10 @@
-#ifndef __GMETAOBJECTLIFEMANAGER_IOBJECT_H
-#define __GMETAOBJECTLIFEMANAGER_IOBJECT_H
+#ifndef CPGF_GMETAOBJECTLIFEMANAGER_IOBJECT_H
+#define CPGF_GMETAOBJECTLIFEMANAGER_IOBJECT_H
 
 #include "cpgf/metatraits/gmetaobjectlifemanager.h"
 #include "cpgf/gtypeutil.h"
 #include "cpgf/genableif.h"
-
+#include "cpgf/gtypetraits.h"
 
 namespace cpgf {
 

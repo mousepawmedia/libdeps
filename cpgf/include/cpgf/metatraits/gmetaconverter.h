@@ -1,5 +1,5 @@
-#ifndef __GMETACONVERTER_H
-#define __GMETACONVERTER_H
+#ifndef CPGF_GMETACONVERTER_H
+#define CPGF_GMETACONVERTER_H
 
 #include "cpgf/gapiutil.h"
 
@@ -44,7 +44,7 @@ template <typename T, typename Enabled = void>
 struct GMetaTraitsCreateConverter
 {
 	static IMetaConverter * createConverter(const GMetaTraitsParam &) {
-		return NULL;
+		return nullptr;
 	}
 };
 

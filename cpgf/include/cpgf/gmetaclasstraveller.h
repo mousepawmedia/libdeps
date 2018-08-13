@@ -1,5 +1,5 @@
-#ifndef __GMETACLASSTRAVELLER_H
-#define __GMETACLASSTRAVELLER_H
+#ifndef CPGF_GMETACLASSTRAVELLER_H
+#define CPGF_GMETACLASSTRAVELLER_H
 
 
 #include "cpgf/gclassutil.h"
@@ -24,7 +24,10 @@ private:
 		~Node();
 
 		Node(const Node & other);
-		Node & operator = (const Node & other);
+		Node & operator = (Node other);
+		Node & operator = (Node && other);
+
+		void swap(Node & other);
 
 	public:
 		GSharedInterface<IMetaClass> metaClass;

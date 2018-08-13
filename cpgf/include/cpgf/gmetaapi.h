@@ -1,12 +1,12 @@
-#ifndef __GMETAAPI_H
-#define __GMETAAPI_H
+#ifndef CPGF_GMETAAPI_H
+#define CPGF_GMETAAPI_H
 
 #include "cpgf/gapi.h"
 #include "cpgf/gvariant.h"
 #include "cpgf/gmetatype.h"
 #include "cpgf/gmetaextendtype.h"
-#include "cpgf/gstdint.h"
 
+#include <cstdint>
 
 namespace cpgf {
 

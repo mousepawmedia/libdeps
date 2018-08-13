@@ -1,5 +1,5 @@
-#ifndef __GMETASHAREDPTRTRAITS_H
-#define __GMETASHAREDPTRTRAITS_H
+#ifndef CPGF_GMETASHAREDPTRTRAITS_H
+#define CPGF_GMETASHAREDPTRTRAITS_H
 
 #include "cpgf/gapiutil.h"
 #include "cpgf/gmetatype.h"
@@ -53,7 +53,7 @@ template <typename T, typename Enabled = void>
 struct GMetaTraitsCreateSharedPointerTraits
 {
 	static IMetaSharedPointerTraits * createSharedPointerTraits(const GMetaTraitsParam &) {
-		return NULL;
+		return nullptr;
 	}
 };
 

@@ -1,5 +1,5 @@
-#ifndef __TESTSCRIPTBINDMETADATA2_H
-#define __TESTSCRIPTBINDMETADATA2_H
+#ifndef CPGF_TESTSCRIPTBINDMETADATA2_H
+#define CPGF_TESTSCRIPTBINDMETADATA2_H
 
 #include "../testmetatraits.h"
 
@@ -205,6 +205,11 @@ public:
 		}
 	}
 	
+	// https://github.com/cpgf/cpgf/issues/65
+	void testParamReferenceToPointer(int * & param) const {
+		param = nullptr;
+	}
+
 public:
 	int	value;
 	RawData raw;

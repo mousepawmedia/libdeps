@@ -1,58 +1,15 @@
 #include "cpgf/scriptbind/gscriptbindutil.h"
-
 #include "../pinclude/gscriptbindapiimpl.h"
 
 #include <string>
 
-
 using namespace std;
 using namespace cpgf::bind_internal;
 
-
 namespace cpgf {
 
-
-#define DEF_LOAD_PARAM_HELPER(N, unused) params[N] = &GPP_CONCAT(p, N);
-#define DEF_LOAD_PARAM(N) \
-	const GVariant * params[N == 0 ? 1 : N]; \
-	GPP_REPEAT_3(N, DEF_LOAD_PARAM_HELPER, GPP_EMPTY())
-
-#define DEF_LOAD_PARAM_HELPER_API(N, unused) params[N] = GPP_CONCAT(p, N).getValue().refData();
-#define DEF_LOAD_PARAM_API(N) \
-	GVariantData params[N == 0 ? 1 : N]; \
-	GPP_REPEAT_3(N, DEF_LOAD_PARAM_HELPER_API, GPP_EMPTY())
-
-#define DEF_CALL_HELPER(N, unused) \
-	GVariant invokeScriptFunction(GScriptObject * scriptObject, const char * functionName GPP_COMMA_IF(N) GPP_REPEAT_PARAMS(N, const GTypedVariant & p)) { \
-		DEF_LOAD_PARAM(N) \
-		return scriptObject->invokeIndirectly(functionName, params, N); \
-	} \
-	GVariant invokeScriptFunction(IScriptObject * scriptObject, const char * functionName GPP_COMMA_IF(N) GPP_REPEAT_PARAMS(N, const GTypedVariant & p)) { \
-		DEF_LOAD_PARAM_API(N) \
-		GVariant result; \
-		GSharedInterface<IScriptObject> holder(scriptObject); /* Hold the object so metaCheckError won't crash if scriptObject is freed in invoke */ \
-		scriptObject->invoke(&result.refData(), functionName, params, N); \
-		metaCheckError(scriptObject); \
-		return result; \
-	} \
-	GVariant invokeScriptFunction(GScriptFunction * scriptFunction GPP_COMMA_IF(N) GPP_REPEAT_PARAMS(N, const GTypedVariant & p)) { \
-		DEF_LOAD_PARAM(N) \
-		return scriptFunction->invokeIndirectly(params, N); \
-	} \
-	GVariant invokeScriptFunction(IScriptFunction * scriptFunction GPP_COMMA_IF(N) GPP_REPEAT_PARAMS(N, const GTypedVariant & p)) { \
-		DEF_LOAD_PARAM_API(N) \
-		GVariant result; \
-		GSharedInterface<IScriptFunction> holder(scriptFunction); /* Hold the function so metaCheckError won't crash if scriptFunction is freed in invoke */ \
-		scriptFunction->invoke(&result.refData(), params, N); \
-		metaCheckError(scriptFunction); \
-		return result; \
-	}
-
-GPP_REPEAT_2(REF_MAX_ARITY, DEF_CALL_HELPER, GPP_EMPTY())
-
-
 inline bool isCSymbol(unsigned char c) {
-    return isalpha(c) || c == '_' || isdigit(c);
+	return isalpha(c) || c == '_' || isdigit(c);
 }
 
 std::string normalizeReflectName(const char * name)
@@ -90,9 +47,6 @@ GScriptValue scriptGetValue(GScriptObject * scriptObject, const char * name)
 	return scriptObject->getValue(name);
 }
 
-// This function is defined in gscriptvalue.cpp internally.
-GScriptValue createScriptValueFromData(const GScriptValueData & data);
-
 GScriptValue scriptGetValue(IScriptObject * scriptObject, const char * name)
 {
 	GScriptValueData data;
@@ -111,18 +65,6 @@ void scriptSetValue(IScriptObject * scriptObject, const char * name, const GScri
 	scriptObject->setValue(name, &data);
 }
 
-GScriptValue scriptGetScriptFunction(GScriptObject * scriptObject, const char * name)
-{
-	return scriptObject->getScriptFunction(name);
-}
-
-GScriptValue scriptGetScriptFunction(IScriptObject * scriptObject, const char * name)
-{
-	GScriptValueData data;
-	scriptObject->getScriptFunction(&data, name);
-	return createScriptValueFromData(data);
-}
-
 GScriptValue scriptCreateScriptObject(GScriptObject * scriptObject, const char * name)
 {
 	return scriptObject->createScriptObject(name);
@@ -135,6 +77,67 @@ GScriptValue scriptCreateScriptObject(IScriptObject * scriptObject, const char *
 	return createScriptValueFromData(data);
 }
 
+GScriptValue scriptGetScriptFunction(GScriptObject * scriptObject, const char * name)
+{
+	return scriptObject->getScriptFunction(name);
+}
+
+GScriptValue scriptGetScriptFunction(IScriptObject * scriptObject, const char * name)
+{
+	GScriptValueData data;
+	scriptObject->getScriptFunction(&data, name);
+	return createScriptValueFromData(data);
+}
+
+GScriptValue scriptGetAsScriptArray(GScriptObject * scriptObject, const char * name)
+{
+	return scriptObject->getAsScriptArray(name);
+}
+
+GScriptValue scriptGetAsScriptArray(IScriptObject * scriptObject, const char * name)
+{
+	GScriptValueData data;
+	scriptObject->getAsScriptArray(&data, name);
+	return createScriptValueFromData(data);
+}
+
+GScriptValue scriptCreateScriptArray(GScriptObject * scriptObject, const char * name)
+{
+	return scriptObject->createScriptArray(name);
+}
+
+GScriptValue scriptCreateScriptArray(IScriptObject * scriptObject, const char * name)
+{
+	GScriptValueData data;
+	scriptObject->createScriptArray(&data, name);
+	return createScriptValueFromData(data);
+}
+
+GScriptValue scriptGetScriptArrayValue(IScriptArray * scriptArray, size_t index)
+{
+	GScriptValueData data;
+	scriptArray->getValue(&data, (uint32_t)index);
+	return createScriptValueFromData(data);
+}
+
+void scriptSetScriptArrayValue(IScriptArray * scriptArray, size_t index, const GScriptValue & value)
+{
+	GScriptValueData data(GScriptValue(value).takeData());
+	scriptArray->setValue((uint32_t)index, &data);
+}
+
+GScriptValue scriptGetAsScriptArray(IScriptArray * scriptArray, size_t index)
+{
+	GScriptValueData data;
+	scriptArray->getAsScriptArray(&data, (uint32_t)index);
+	return createScriptValueFromData(data);
+}
+GScriptValue scriptCreateScriptArray(IScriptArray * scriptArray, size_t index)
+{
+	GScriptValueData data;
+	scriptArray->createScriptArray(&data, (uint32_t)index);
+	return createScriptValueFromData(data);
+}
 IScriptObject * scriptObjectToInterface(GScriptObject * scriptObject, bool freeObject)
 {
 	return new ImplScriptObject(scriptObject, freeObject);
@@ -148,15 +151,15 @@ IScriptObject * scriptObjectToInterface(GScriptObject * scriptObject)
 void injectObjectToScript(IScriptObject * scriptObject, IMetaClass * metaClass, void * instance, const char * namespaceName)
 {
 	GScopedInterface<IObject> metaObject;
-	
+
 	GMetaMapClass mapClass(metaClass);
-	
+
 	GScopedInterface<IScriptObject> namespaceHolder;
-	if(namespaceName != NULL && *namespaceName) {
+	if(namespaceName != nullptr && *namespaceName) {
 		namespaceHolder.reset(scriptCreateScriptObject(scriptObject, namespaceName).toScriptObject());
 		scriptObject = namespaceHolder.get();
 	}
-	
+
 	const GMetaMapClass::MapType * mapData = mapClass.getMap();
 	for(GMetaMapClass::MapType::const_iterator it = mapData->begin(); it != mapData->end(); ++it) {
 		const char * name = it->first;
@@ -204,7 +207,7 @@ void injectObjectToScript(IScriptObject * scriptObject, IMetaClass * metaClass, 
 				break;
 		}
 	}
-	
+
 }
 
 void injectObjectToScript(GScriptObject * scriptObject, IMetaClass * metaClass, void * instance, const char * namespaceName)
@@ -227,7 +230,7 @@ void injectObjectToScript(GScriptObject * scriptObject, GMetaClass * metaClass, 
 
 IScriptObject * createScriptObject(IScriptObject * owner, const char * namespaces)
 {
-	if(namespaces == NULL || *namespaces == 0) {
+	if(namespaces == nullptr || *namespaces == 0) {
 		owner->addReference();
 		return owner;
 	}

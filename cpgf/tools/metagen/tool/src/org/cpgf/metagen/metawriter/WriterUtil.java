@@ -41,7 +41,9 @@ public class WriterUtil {
 				if(value.equals("NULL") || value.equals("nullptr")) {
 					value = "(" + paramList.get(index).getType().getLiteralType() + ")" + value;
 				}
-				writer.writeLine("._default(copyVariantFromCopyable(" + value + "))");
+				writer.writeLine("._default(copyVariantFromCopyable<"
+						+ paramList.get(index).getType().getLiteralType()
+						+ ">(" + value + "))");
 				--index;
 			}
 
@@ -102,7 +104,7 @@ public class WriterUtil {
 		if(cppClass.isGlobal()) {
 			codeWriter.writeLine("GDefineMetaGlobalDangle _d = GDefineMetaGlobalDangle::dangle();");
 			
-			codeWriter.writeLine(callFunc + "(0, _d);");
+			codeWriter.writeLine(callFunc + "(_d);");
 		}
 		else {
 			String policy = "";
@@ -119,9 +121,8 @@ public class WriterUtil {
 					typeName = typeName + Util.generateBaseClassList(cppClass, templateInstance);
 					typeName = typeName + " >";
 
-					codeWriter.writeLine(typeName +  " _nd = " + typeName + policy + "::declare(\"" + normalizeClassName(templateInstance.getMapName()) + "\");");
+					codeWriter.writeLine(typeName +  " _nd = " + typeName + policy + "::lazyDeclare(\"" + normalizeClassName(templateInstance.getMapName()) + "\", &"+callFunc+"<" + typeName + ", " + templateInstance.getTemplateType() + " >);");
 					
-					codeWriter.writeLine(callFunc + "<" + typeName + ", " + templateInstance.getTemplateType() + " >(0, _nd);");
 					codeWriter.writeLine("_d._class(_nd);");
 
 					codeWriter.endBlock();
@@ -133,9 +134,8 @@ public class WriterUtil {
 				String typeName = "GDefineMetaClass<" + cppClass.getLiteralName();
 				typeName = typeName + Util.generateBaseClassList(cppClass);
 				typeName = typeName + ">";
-				codeWriter.writeLine(typeName +  " _nd = " + typeName + policy + "::declare(\"" + cppClass.getPrimaryName() + "\");");
+				codeWriter.writeLine(typeName +  " _nd = " + typeName + policy + "::lazyDeclare(\"" + cppClass.getPrimaryName() + "\", &"+callFunc+");");
 				
-				codeWriter.writeLine(callFunc + "(0, _nd);");
 				codeWriter.writeLine("_d._class(_nd);");
 
 				codeWriter.endBlock();
@@ -194,8 +194,8 @@ public class WriterUtil {
 		return getBitfieldWrapperName(field) + "_setter";
 	}
 
-	public static boolean shouldGenerateBitfieldWrapper(Config config, CppField field) {
-		return config.wrapBitField && field.isBitField() && Util.allowMetaData(config, field) && !field.getOwner().isTemplate();
+	public static boolean shouldGenerateBitfieldWrapper(MetaInfo metaInfo, CppField field) {
+		return metaInfo.getConfig().wrapBitField && field.isBitField() && Util.allowMetaData(metaInfo.getConfig(), field) && !field.getOwner().isTemplate() && !metaInfo.getCallbackClassMap().getData(field).isSkipBind();
 	}
 
 	public static String getOperatorWraperNamePrefix(MetaInfo metaInfo, Operator op) {
@@ -212,12 +212,6 @@ public class WriterUtil {
 			&& !metaInfo.getCallbackClassMap().getData(op).isSkipBind()
 			&& !op.isTemplate()
 			&& !op.getOwner().isGlobal()
-			&& (
-					op.getOwner().getOwner() == null
-					|| op.getOwner().getOwner().isGlobal()
-					|| (!op.getOwner().isTemplate() && !op.getOwner().getOwner().isTemplate())
-					&& op.getOwner().isPublic()
-				)
 			&& !op.getOperator().equals("->")
 			&& !op.isTypeConverter()
 		;
@@ -238,7 +232,7 @@ public class WriterUtil {
 		codeWriter.write("(" + Util.quoteText(reflectName) + ", ");
 		if(usePrototype) {
 			String typePrefix = scopePrefix;
-			if(method.isStatic()) {
+			if(method.isStatic() && !method.isProtected()) {
 				typePrefix = "";
 			}
 			codeWriter.write("(" + method.getResultType().getLiteralType() + " (" + typePrefix + "*) (");
@@ -261,7 +255,7 @@ public class WriterUtil {
 			className = className.toLowerCase();
 		}
 		else {
-			className = cppClassName;
+			className = Util.normalizeSymbol(cppClassName);
 		}
 		className = Util.upcaseFirst(className);
 			

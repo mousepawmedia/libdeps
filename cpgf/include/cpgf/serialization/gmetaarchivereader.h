@@ -1,5 +1,5 @@
-#ifndef __GMETAARCHIVEREADER_H
-#define __GMETAARCHIVEREADER_H
+#ifndef CPGF_GMETAARCHIVEREADER_H
+#define CPGF_GMETAARCHIVEREADER_H
 
 #include "cpgf/serialization/gmetaarchivecommon.h"
 
@@ -91,7 +91,7 @@ void serializeReadData(IMetaArchiveReader * archiveReader, const char * name, T 
 template <typename T>
 void serializeReadData(IMetaArchiveReader * archiveReader, const char * name, T & instance) 
 {
-	serializeReadData(archiveReader, name, instance, NULL);
+	serializeReadData(archiveReader, name, instance, nullptr);
 }
 
 

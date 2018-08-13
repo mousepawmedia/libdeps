@@ -1,5 +1,5 @@
-#ifndef __GMETASCRIPTWRAPPER_H
-#define __GMETASCRIPTWRAPPER_H
+#ifndef CPGF_GMETASCRIPTWRAPPER_H
+#define CPGF_GMETASCRIPTWRAPPER_H
 
 
 #include "cpgf/gapiutil.h"
@@ -21,7 +21,7 @@ template <typename T>
 struct GMetaTraitsCreateScriptWrapper
 {
 	static IMetaScriptWrapper * createScriptWrapper(const GMetaTraitsParam &) {
-		return NULL;
+		return nullptr;
 	}
 };
 

@@ -55,11 +55,9 @@ public:
 		this->cs = "Sum";
 	}
 
-#if G_SUPPORT_RVALUE_REFERENCE
 	// 9, note 8 is constructWithMethod
 	CLASS(CLASS && other) : ci(other.ci), cs(other.cs) {
 	}
-#endif
 
 };
 
@@ -85,20 +83,16 @@ G_AUTO_RUN_BEFORE_MAIN()
 		._constructor<void * (int)>()
 	;
 
-	GDefineMetaClass<CLASS>
-		::define(NAME_CLASS)
+	GDefineMetaClass<CLASS> meta = GDefineMetaClass<CLASS>::define(NAME_CLASS);
+	meta._class(dangle);
 
-		._class(dangle)
-
-		._constructor<void * (const string &)>(GMetaPolicyCopyAllConstReference())
-		._constructor<void * (int, const string &)>(GMetaPolicyCopyAllConstReference())
-		._constructor<void * (const CLASS_DATA &)>()
-		._constructor<void * (const CLASS_DATA *)>()
-		._constructor<void * (const GMetaVariadicParam *)>()
-		._constructor(&constructWithMethod, GMetaPolicyCopyAllConstReference())
-#if G_SUPPORT_RVALUE_REFERENCE
-		._constructor<void * (CLASS &&)>()
-#endif
+	meta._constructor<void * (const string &)>(GMetaPolicyCopyAllConstReference());
+	meta._constructor<void * (int, const string &)>(GMetaPolicyCopyAllConstReference());
+	meta._constructor<void * (const CLASS_DATA &)>();
+	meta._constructor<void * (const CLASS_DATA *)>();
+	meta._constructor<void * (const GMetaVariadicParam *)>();
+	meta._constructor(&constructWithMethod, GMetaPolicyCopyAllConstReference());
+	meta._constructor<void * (CLASS &&)>();
 	;
 }
 
@@ -137,10 +131,8 @@ GTEST(Lib_Exists)
 	CTOR(8);
 	GCHECK(ctor);
 
-#if G_SUPPORT_RVALUE_REFERENCE
 	CTOR(R_INDEX);
 	GCHECK(ctor);
-#endif
 
 	CTOR(100);
 	GCHECK(! ctor);
@@ -184,10 +176,8 @@ GTEST(API_Exists)
 	CTOR(8);
 	GCHECK(ctor);
 
-#if G_SUPPORT_RVALUE_REFERENCE
 	CTOR(R_INDEX);
 	GCHECK(ctor);
-#endif
 
 	CTOR(100);
 	GCHECK(! ctor);
@@ -246,12 +236,10 @@ GTEST(Lib_ParamType)
 	GEQUAL(ctor->getParamType(0), createMetaType<int>());
 	GEQUAL(ctor->getParamType(1), createMetaType<const string &>());
 
-#if G_SUPPORT_RVALUE_REFERENCE
 	CTOR(R_INDEX);
 	GCHECK(! ctor->isVariadic());
 	GEQUAL(ctor->getParamCount(), 1);
 	GEQUAL(ctor->getParamType(0), createMetaType<CLASS &&>());
-#endif
 
 }
 
@@ -297,7 +285,7 @@ GTEST(Lib_CheckParam)
 
 	CTOR(6);
 	GCHECK(ctor->checkParam((CLASS_DATA *)0, 0));
-	GCHECK(ctor->checkParam("abc", 0)); // dangerous
+//	GCHECK(ctor->checkParam("abc", 0)); // dangerous
 	GCHECK(! ctor->checkParam("", 1));
 
 	CTOR(7);
@@ -314,12 +302,10 @@ GTEST(Lib_CheckParam)
 	GCHECK(! ctor->checkParam("", 0));
 	GCHECK(! ctor->checkParam(38, 1));
 
-#if G_SUPPORT_RVALUE_REFERENCE
 	CTOR(R_INDEX);
 	GCHECK(ctor->checkParam(CLASS(), 0));
 	GCHECK(! ctor->checkParam("", 0));
 	GCHECK(! ctor->checkParam("", 1));
-#endif
 }
 
 
@@ -367,7 +353,7 @@ GTEST(API_CheckParam)
 
 	CTOR(6);
 	GCHECK(metaCheckParam(ctor.get(), (CLASS_DATA *)0, 0));
-	GCHECK(metaCheckParam(ctor.get(), "abc", 0)); // dangerous
+//	GCHECK(metaCheckParam(ctor.get(), "abc", 0)); // dangerous
 	GCHECK(! metaCheckParam(ctor.get(), "", 1));
 
 	CTOR(7);
@@ -384,12 +370,10 @@ GTEST(API_CheckParam)
 	GCHECK(! metaCheckParam(ctor.get(), "", 0));
 	GCHECK(! metaCheckParam(ctor.get(), 38, 1));
 
-#if G_SUPPORT_RVALUE_REFERENCE
 	CTOR(R_INDEX);
 	GCHECK(metaCheckParam(ctor.get(), CLASS(), 0));
 	GCHECK(! metaCheckParam(ctor.get(), "", 0));
 	GCHECK(! metaCheckParam(ctor.get(), "", 1));
-#endif
 }
 
 
@@ -474,14 +458,12 @@ GTEST(Lib_Construct)
 	metaClass->destroyInstance(pobj);
 	EXCEPT_META(ctor->invoke());
 
-#if G_SUPPORT_RVALUE_REFERENCE
 	CTOR(R_INDEX);
 	pobj = (CLASS * )ctor->invoke(CLASS(8, "clone me"));
 	GEQUAL(pobj->ci, 8);
 	GEQUAL(pobj->cs, "clone me");
 	metaClass->destroyInstance(pobj);
 	EXCEPT_META(ctor->invoke(CLASS(), ""));
-#endif
 }
 
 
@@ -571,14 +553,12 @@ GTEST(API_Construct)
 	metaClass->destroyInstance(pobj);
 	EXCEPT_META(metaInvokeConstructor(ctor.get()));
 
-#if G_SUPPORT_RVALUE_REFERENCE
 	CTOR(R_INDEX);
 	pobj = (CLASS * )metaInvokeConstructor(ctor.get(), clone);
 	GEQUAL(pobj->ci, 8);
 	GEQUAL(pobj->cs, "clone me");
 	metaClass->destroyInstance(pobj);
 	EXCEPT_META(metaInvokeConstructor(ctor.get(), clone, ""));
-#endif
 }
 
 

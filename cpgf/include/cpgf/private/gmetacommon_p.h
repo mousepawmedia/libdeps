@@ -1,5 +1,5 @@
-#ifndef __GMETACOMMON_P_H
-#define __GMETACOMMON_P_H
+#ifndef CPGF_GMETACOMMON_P_H
+#define CPGF_GMETACOMMON_P_H
 
 #include <string.h>
 
@@ -12,13 +12,6 @@ namespace meta_internal {
 void * newZeroBuffer(void * buffer, size_t size, void * copy);
 
 class GMetaItemImplement;
-
-struct CStringCompare
-{
-	bool operator () (const char * a, const char * b) const {
-		return strcmp(a, b) < 0;
-	}
-};
 
 
 template <typename T>

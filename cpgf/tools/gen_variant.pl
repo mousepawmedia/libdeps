@@ -1,244 +1,366 @@
 use strict;
 use warnings;
 
-my $fromValue = "{indent} case {vt}:\n"
-			.	"{indent+1} return variant_internal::CastVariantHelper<{type}, ResultType>::cast(v.data.{value});\n"
-			.	"\n"
-			;
-
-my $fromPtr = "{indent} case {vt} | byPointer:\n"
-			.	"{indent+1} return variant_internal::CastVariantHelper<{type} *, ResultType>::cast(const_cast<{type} *>(v.data.{ptr}));\n"
-			.	"\n"
-			;
-
-my $fromRef = "{indent} case {vt} | byReference:\n"
-			.	"{indent+1} return const_cast<RefValueType &>(*variant_internal::CastVariantHelper<const volatile {type} *, const volatile RefValueType *>::cast(v.data.{ptr}));\n"
-			.	"\n"
-			;
-
-my $canFromValue = "{indent} case {vt}:\n"
-			.	"{indent+1} return variant_internal::isNonPointer<ResultType>() && variant_internal::CastVariantHelper<{type}, ResultType>::CanCast;\n"
-			.	"\n"
-			;
-
-my $canFromPtr = "{indent} case {vt} | byPointer:\n"
-			.	"{indent+1} return variant_internal::isNonPrimary<ResultType>() && variant_internal::CastVariantHelper<{type} *, ResultType>::CanCast;\n"
-			.	"\n"
-			;
-
-my $canFromRef = "{indent} case {vt} | byReference:\n"
-			.	"{indent+1} return variant_internal::CastVariantHelper<const volatile {type} *, const volatile RefValueType *>::CanCast;\n"
-			.	"\n"
-			;
-
-
-my @types = (
-	{ vt => "vtBool", type => "bool", value => "valueBool", ptr => "ptrBool", fromValue => $fromValue, fromPtr => $fromPtr, fromRef => $fromRef, canFromValue => $canFromValue, canFromPtr => $canFromPtr, canFromRef => $canFromRef },
-	{ vt => "vtChar", type => "char", value => "valueChar", ptr => "ptrChar", fromValue => $fromValue, fromPtr => $fromPtr, fromRef => $fromRef, canFromValue => $canFromValue, canFromPtr => $canFromPtr, canFromRef => $canFromRef },
-	{ vt => "vtWchar", type => "wchar_t", value => "valueWchar", ptr => "ptrWchar", fromValue => $fromValue, fromPtr => $fromPtr, fromRef => $fromRef, canFromValue => $canFromValue, canFromPtr => $canFromPtr, canFromRef => $canFromRef },
-	{ vt => "vtSignedChar", type => "signed char", value => "valueSignedChar", ptr => "ptrSignedChar", fromValue => $fromValue, fromPtr => $fromPtr, fromRef => $fromRef, canFromValue => $canFromValue, canFromPtr => $canFromPtr, canFromRef => $canFromRef },
-	{ vt => "vtUnsignedChar", type => "unsigned char", value => "valueUnsignedChar", ptr => "ptrUnsignedChar", fromValue => $fromValue, fromPtr => $fromPtr, fromRef => $fromRef, canFromValue => $canFromValue, canFromPtr => $canFromPtr, canFromRef => $canFromRef },
-	{ vt => "vtSignedShort", type => "signed short", value => "valueSignedShort", ptr => "ptrSignedShort", fromValue => $fromValue, fromPtr => $fromPtr, fromRef => $fromRef, canFromValue => $canFromValue, canFromPtr => $canFromPtr, canFromRef => $canFromRef },
-	{ vt => "vtUnsignedShort", type => "unsigned short", value => "valueUnsignedShort", ptr => "ptrUnsignedShort", fromValue => $fromValue, fromPtr => $fromPtr, fromRef => $fromRef, canFromValue => $canFromValue, canFromPtr => $canFromPtr, canFromRef => $canFromRef },
-	{ vt => "vtSignedInt", type => "signed int", value => "valueSignedInt", ptr => "ptrSignedInt", fromValue => $fromValue, fromPtr => $fromPtr, fromRef => $fromRef, canFromValue => $canFromValue, canFromPtr => $canFromPtr, canFromRef => $canFromRef },
-	{ vt => "vtUnsignedInt", type => "unsigned int", value => "valueUnsignedInt", ptr => "ptrUnsignedInt", fromValue => $fromValue, fromPtr => $fromPtr, fromRef => $fromRef, canFromValue => $canFromValue, canFromPtr => $canFromPtr, canFromRef => $canFromRef },
-	{ vt => "vtSignedLong", type => "signed long", value => "valueSignedLong", ptr => "ptrSignedLong", fromValue => $fromValue, fromPtr => $fromPtr, fromRef => $fromRef, canFromValue => $canFromValue, canFromPtr => $canFromPtr, canFromRef => $canFromRef },
-	{ vt => "vtUnsignedLong", type => "unsigned long", value => "valueUnsignedLong", ptr => "ptrUnsignedLong", fromValue => $fromValue, fromPtr => $fromPtr, fromRef => $fromRef, canFromValue => $canFromValue, canFromPtr => $canFromPtr, canFromRef => $canFromRef },
-	{ vt => "vtSignedLongLong", type => "signed long long", value => "valueSignedLongLong", ptr => "ptrSignedLongLong", fromValue => $fromValue, fromPtr => $fromPtr, fromRef => $fromRef, canFromValue => $canFromValue, canFromPtr => $canFromPtr, canFromRef => $canFromRef },
-	{ vt => "vtUnsignedLongLong", type => "unsigned long long", value => "valueUnsignedLongLong", ptr => "ptrUnsignedLongLong", fromValue => $fromValue, fromPtr => $fromPtr, fromRef => $fromRef, canFromValue => $canFromValue, canFromPtr => $canFromPtr, canFromRef => $canFromRef },
-	{ vt => "vtFloat", type => "float", value => "valueFloat", ptr => "ptrFloat", fromValue => $fromValue, fromPtr => $fromPtr, fromRef => $fromRef, canFromValue => $canFromValue, canFromPtr => $canFromPtr, canFromRef => $canFromRef },
-	{ vt => "vtDouble", type => "double", value => "valueDouble", ptr => "ptrDouble", fromValue => $fromValue, fromPtr => $fromPtr, fromRef => $fromRef, canFromValue => $canFromValue, canFromPtr => $canFromPtr, canFromRef => $canFromRef },
-	{ vt => "vtLongDouble", type => "long double", value => "valueLongDouble", ptr => "ptrLongDouble", fromValue => $fromValue, fromPtr => $fromPtr, fromRef => $fromRef, canFromValue => $canFromValue, canFromPtr => $canFromPtr, canFromRef => $canFromRef },
-
-	{ vt => "vtPointer", type => "void *", value => "valuePointer", ptr => "ptrPointer",
-		fromValue => "{indent} case {vt}:\n"
-				.	 "{indent+1} return variant_internal::CastVariantHelper<const volatile void *, ResultType>::cast(v.data.{value});\n"
-				.	 "\n"
-		,
-		fromPtr => "{indent} case {vt} | byPointer:\n"
-				.	 "{indent+1} return variant_internal::CastVariantHelper<void *, ResultType>::cast(const_cast<void *>(v.data.{ptr}));\n"
-				.	 "\n"
-		,
-		fromRef => "{indent} case {vt} | byReference:\n"
-				.	 "{indent+1} return const_cast<RefValueType &>(*variant_internal::CastVariantHelper<const volatile void *, const volatile RefValueType *>::cast(v.data.{ptr}));\n"
-				.	 "\n"
-		,
-		canFromValue => "{indent} case {vt}:\n"
-				.	 "{indent+1} return variant_internal::CastVariantHelper<const volatile void *, ResultType>::CanCast;\n"
-				.	 "\n"
-		,
-		canFromPtr => "{indent} case {vt} | byPointer:\n"
-				.	 "{indent+1} return variant_internal::isNonPrimary<ResultType>() && variant_internal::CastVariantHelper<void *, ResultType>::CanCast;\n"
-				.	 "\n"
-		,
-		canFromRef => "{indent} case {vt} | byReference:\n"
-				.	 "{indent+1} return variant_internal::CastVariantHelper<const volatile void *, const volatile RefValueType *>::CanCast;\n"
-				.	 "\n"
-		,
+my @itemList = (
+	{
+		vt => 'vtBool',
+		type => 'bool',
+		value => 'valueInt',
 	},
 
-	{ vt => "vtObject", type => "void *", value => "valueObject", ptr => "ptrObject",
-		fromValue => "{indent} case {vt}:\n"
-				.	 "{indent+1} return *variant_internal::CastVariantHelper<const volatile void *, typename RemoveReference<ResultType>::Result *>::cast(v.data.{value});\n"
-				.	 "\n"
-		,
-		fromPtr => "{indent} case {vt} | byPointer:\n"
-				.	 "{indent+1} return variant_internal::CastVariantHelper<void *, ResultType>::cast(const_cast<void *>(v.data.{ptr}));\n"
-				.	 "\n"
-		,
-		fromRef => "{indent} case {vt} | byReference:\n"
-				.	 "{indent+1} return const_cast<RefValueType &>(*variant_internal::CastVariantHelper<const volatile void *, const volatile RefValueType *>::cast(v.data.{ptr}));\n"
-				.	 "\n"
-		,
-		canFromValue => "{indent} case {vt}:\n"
-				.	 "{indent+1} return variant_internal::isNonPointer<ResultType>() && variant_internal::CastVariantHelper<const volatile void *, typename RemoveReference<ResultType>::Result *>::CanCast;\n"
-				.	 "\n"
-		,
-		canFromPtr => "{indent} case {vt} | byPointer:\n"
-				.	 "{indent+1} return variant_internal::isNonPrimary<ResultType>() && variant_internal::CastVariantHelper<void *, ResultType>::CanCast;\n"
-				.	 "\n"
-		,
-		canFromRef => "{indent} case {vt} | byReference:\n"
-				.	 "{indent+1} return variant_internal::isNonPointer<RefValueType>() && variant_internal::CastVariantHelper<const volatile void *, const volatile RefValueType *>::CanCast;\n"
-				.	 "\n"
-		,
+	{
+		vt => 'vtChar',
+		type => 'char',
+		value => 'valueInt',
 	},
 
-	{ vt => "vtShadow", type => "void *", value => "shadowObject", ptr => "#",
-		fromValue => "{indent} case {vt}:\n"
-				.	 "{indent+1} return *variant_internal::CastVariantHelper<const volatile void *, typename RemoveReference<ResultType>::Result *>::cast(v.data.shadowObject->getObject());\n"
-				.	 "\n"
-		,
-		fromPtr => undef,
-		fromRef => undef,
-		canFromValue => "{indent} case {vt}:\n"
-				.	 "{indent+1} return variant_internal::CastVariantHelper<const volatile void *, typename RemoveReference<ResultType>::Result *>::CanCast;\n"
-				.	 "\n"
-		,
-		canFromPtr => undef,
-		canFromRef => undef,
+	{
+		vt => 'vtWchar',
+		type => 'wchar_t',
+		value => 'valueInt',
 	},
+
+	{
+		vt => 'vtSignedChar',
+		type => 'signed char',
+		value => 'valueInt',
+	},
+
+	{
+		vt => 'vtUnsignedChar',
+		type => 'unsigned char',
+		value => 'valueInt',
+	},
+
+	{
+		vt => 'vtSignedShort',
+		type => 'signed short',
+		value => 'valueInt',
+	},
+
+	{
+		vt => 'vtUnsignedShort',
+		type => 'unsigned short',
+		value => 'valueInt',
+	},
+
+	{
+		vt => 'vtSignedInt',
+		type => 'signed int',
+		value => 'valueInt',
+	},
+
+	{
+		vt => 'vtUnsignedInt',
+		type => 'unsigned int',
+		value => 'valueInt',
+	},
+
+	{
+		vt => 'vtSignedLong',
+		type => 'signed long',
+		value => 'valueInt',
+	},
+
+	{
+		vt => 'vtUnsignedLong',
+		type => 'unsigned long',
+		value => 'valueInt',
+	},
+
+	{
+		vt => 'vtSignedLongLong',
+		type => 'signed long long',
+		value => 'valueInt',
+	},
+
+	{
+		vt => 'vtUnsignedLongLong',
+		type => 'unsigned long long',
+		value => 'valueInt',
+	},
+
+	{
+		vt => 'vtFloat',
+		type => 'float',
+		value => 'valueFloat',
+	},
+
+	{
+		vt => 'vtDouble',
+		type => 'double',
+		value => 'valueDouble',
+	},
+
+	{
+		vt => 'vtLongDouble',
+		type => 'long double',
+		value => 'valueLongDouble',
+	},
+
 );
 
-my $currentIndent = 0;
-
-&doMain;
-
-sub doMain
+sub doFormat
 {
-	print &generateCastFromVariant;
+	my ($s) = @_;
 	
-	print "\n\n";
-	print "====================";
-	print "\n\n";
-
-	print &generateCanCastFromVariant;
+	$s =~ s/\n/ /g;
+	$s =~ s/\n\s*\n/\n/g;
+	$s =~ s/([^\s])[ \t]+/$1 /g;
+	$s .= "\n";
+	
+	return $s;
 }
 
-sub indentText
+sub makeTypeList
 {
-	return "\t" x $currentIndent;
+	my ($type, $symbol) = @_;
+	
+	return "cpgf::GTypeList<const $type $symbol, $type $symbol, const volatile $type $symbol, volatile $type $symbol>";
 }
 
-sub indent
+sub makeReferenceToPointerTypeList
 {
-	++$currentIndent;
+	my ($type, $symbol) = @_;
+	
+	return <<EOM;
+				cpgf::GTypeList<
+					const $type * $symbol, $type * $symbol, const volatile $type * $symbol, volatile $type * $symbol,
+					const $type * const $symbol, $type * const $symbol, const volatile $type * const $symbol, volatile $type * const $symbol,
+					const $type * volatile $symbol, $type * volatile $symbol, const volatile $type * volatile $symbol, volatile $type * volatile $symbol,
+					const $type * const volatile $symbol, $type * const volatile $symbol, const volatile $type * const volatile $symbol, volatile $type * const volatile $symbol
+				>
+EOM
 }
 
-sub unindent
+sub doCommon
 {
-	--$currentIndent;
+	my ($item) = @_;
+
+	print &doFormat(<<EOM
+		case GVariantType::$item->{vt}:
+			return (ResultType)helperFromVariant<typename HelperValueType<ResultType>::type, cpgf::GTypeList<$item->{type}> >(data.$item->{value});
+
+EOM
+);
 }
 
-sub replaceText
+sub doCanCommon
 {
-	my ($type, $text) = @_;
+	my ($item) = @_;
 
-	$text =~ s/\{vt\}/$type->{vt}/sg;
-	$text =~ s/\{type\}/$type->{type}/sg;
-	$text =~ s/\{value\}/$type->{value}/sg;
-	$text =~ s/\{ptr\}/$type->{ptr}/sg;
+	print &doFormat(<<EOM
+		case GVariantType::$item->{vt}:
+			return TypeListConvertible<cpgf::GTypeList<$item->{type}>, typename HelperValueType<ResultType>::type>::convertible;
 
-	my $s;
+EOM
+);
+}
 
-	$s = &indentText;
-	$text =~ s/\{indent\}\s*/$s/sg;
+sub doPointer
+{
+	my ($item) = @_;
+
+	my $typeList = &makeTypeList($item->{type}, '*');
+
+	print &doFormat(<<EOM
+		case GVariantType::$item->{vt}:
+			return (ResultType)helperFromVariant<
+				ResultType,
+				$typeList
+			>(data.pointer);
+
+EOM
+);
+}
+
+sub doCanPointer
+{
+	my ($item) = @_;
+
+	my $typeList = &makeTypeList($item->{type}, '*');
+
+	print &doFormat(<<EOM
+		case GVariantType::$item->{vt}:
+			return TypeListConvertible<$typeList, ResultType>::convertible;
+
+EOM
+);
+}
+
+sub doLvalueReference
+{
+	my ($item) = @_;
+
+	my $typeListPointer = &makeTypeList($item->{type}, '*');
+	my $typeListReference = &makeTypeList($item->{type}, '&');
+
+	print &doFormat(<<EOM
+		case GVariantType::$item->{vt}:
+			return (ResultType)helperFromPointerOrReference<
+				ResultType,
+				$typeListPointer,
+				$typeListReference
+			>(($item->{type} &) * ($item->{type} *)data.pointer);
+
+EOM
+);
+}
+
+sub doCanLvalueReference
+{
+	my ($item) = @_;
+
+	my $typeListPointer = &makeTypeList($item->{type}, '*');
+	my $typeListReference = &makeTypeList($item->{type}, '&');
+
+	print &doFormat(<<EOM
+		case GVariantType::$item->{vt}:
+			return TypeListConvertible<$typeListPointer, ResultType>::convertible
+				|| TypeListConvertible<$typeListReference, ResultType>::convertible
+			;
+
+EOM
+);
+}
+
+sub doPointerLvalueReference
+{
+	my ($item) = @_;
 	
-	&indent;
-	$s = &indentText;
-	$text =~ s/\{indent\s*\+\s*1\}\s*/$s/sg;
-	&unindent;
+	my $typeList = &makeReferenceToPointerTypeList($item->{type}, '&');
+
+	print &doFormat(<<EOM
+		case GVariantType::$item->{vt}:
+			return (ResultType)helperFromVariant<
+				ResultType,
+$typeList
+			>(($item->{type} * &) * ($item->{type} **)data.pointer);
+
+EOM
+);
+}
+
+sub doCanPointerLvalueReference
+{
+	my ($item) = @_;
 	
-	return $text;
+	my $typeList = &makeReferenceToPointerTypeList($item->{type}, '&');
+
+	print &doFormat(<<EOM
+		case GVariantType::$item->{vt}:
+			return TypeListConvertible<$typeList, ResultType>::convertible;
+
+EOM
+);
+}
+
+sub doRvalueReference
+{
+	my ($item) = @_;
+
+	my $typeListPointer = &makeTypeList($item->{type}, '*');
+	my $typeListReference = &makeTypeList($item->{type}, '&&');
+
+	print &doFormat(<<EOM
+		case GVariantType::$item->{vt}:
+			return (ResultType)helperFromPointerOrReference<
+				ResultType,
+				$typeListPointer,
+				$typeListReference
+			>(($item->{type} &&) * ($item->{type} *)data.pointer);
+
+EOM
+);
+}
+
+sub doCanRvalueReference
+{
+	my ($item) = @_;
+
+	my $typeListPointer = &makeTypeList($item->{type}, '*');
+	my $typeListReference = &makeTypeList($item->{type}, '&&');
+
+	print &doFormat(<<EOM
+		case GVariantType::$item->{vt}:
+			return TypeListConvertible<$typeListPointer, ResultType>::convertible
+				|| TypeListConvertible<$typeListReference, ResultType>::convertible
+			;
+
+EOM
+);
+}
+
+sub doPointerRvalueReference
+{
+	my ($item) = @_;
+
+	my $typeList = &makeReferenceToPointerTypeList($item->{type}, '&&');
+
+	print &doFormat(<<EOM
+		case GVariantType::$item->{vt}:
+			return (ResultType)helperFromVariant<
+				ResultType,
+$typeList
+			>(($item->{type} * &&) * ($item->{type} **)data.pointer);
+
+EOM
+);
+}
+
+sub doCanPointerRvalueReference
+{
+	my ($item) = @_;
+
+	my $typeList = &makeReferenceToPointerTypeList($item->{type}, '&&');
+
+	print &doFormat(<<EOM
+		case GVariantType::$item->{vt}:
+			return TypeListConvertible<$typeList, ResultType>::convertible;
+
+EOM
+);
 }
 
 
-sub generateCanCastFromVariantXXX
-{
-	my $text = &generateCastFromVariant;
+# cast
 
-	my @lines = split("\n", $text);
+print "\n CastVariant_Value =======\n\n";
+foreach my $item (@itemList) { &doCommon($item); }
 
-	foreach(@lines) {
-		s/^(\s*).*(variant_internal::CastVariantHelper\s*\<.+\>\s*::).*/$1return $2CanCast;/;
-	}
+print "\n CastVariant_Pointer =======\n\n";
+foreach my $item (@itemList) { &doPointer($item); }
 
-	$text = join("\n", @lines);
+print "\n CastVariant_LvalueReference =======\n\n";
+foreach my $item (@itemList) { &doLvalueReference($item); }
 
-	return $text;
-}
+print "\n CastVariant_Pointer_LvalueReference =======\n\n";
+foreach my $item (@itemList) { &doPointerLvalueReference($item); }
 
-sub generateCanCastFromVariant
-{
-	my $result = '';
+print "\n CastVariant_RvalueReference =======\n\n";
+foreach my $item (@itemList) { &doRvalueReference($item); }
 
-	&indent;
-	&indent;
-	&indent;
+print "\n CastVariant_Pointer_RvalueReference =======\n\n";
+foreach my $item (@itemList) { &doPointerRvalueReference($item); }
 
-	foreach(@types) {
-		$result .= &replaceText($_, $_->{canFromValue}) if(defined($_->{canFromValue}));
-	}
-	
-	foreach(@types) {
-		$result .= &replaceText($_, $_->{canFromPtr}) if(defined($_->{canFromPtr}));
-	}
-	
-	foreach(@types) {
-		$result .= &replaceText($_, $_->{canFromRef}) if(defined($_->{canFromRef}));
-	}
-	
-	&unindent;
-	&unindent;
-	&unindent;
+# can cast
 
-	return $result;
-}
+print "\n CastVariant_Value canCast =======\n\n";
+foreach my $item (@itemList) { &doCanCommon($item); }
 
-sub generateCastFromVariant
-{
-	my $result = '';
+print "\n CastVariant_Pointer canCast =======\n\n";
+foreach my $item (@itemList) { &doCanPointer($item); }
 
-	&indent;
-	&indent;
-	&indent;
+print "\n CastVariant_LvalueReference canCast =======\n\n";
+foreach my $item (@itemList) { &doCanLvalueReference($item); }
 
-	foreach(@types) {
-		$result .= &replaceText($_, $_->{fromValue});
-	}
-	
-	foreach(@types) {
-		$result .= &replaceText($_, $_->{fromPtr}) if(defined($_->{fromPtr}));
-	}
-	
-	foreach(@types) {
-		$result .= &replaceText($_, $_->{fromRef}) if(defined($_->{fromRef}));
-	}
-	
-	&unindent;
-	&unindent;
-	&unindent;
+print "\n CastVariant_Pointer_LvalueReference canCast =======\n\n";
+foreach my $item (@itemList) { &doCanPointerLvalueReference($item); }
 
-	return $result;
-}
+print "\n CastVariant_RvalueReference canCast =======\n\n";
+foreach my $item (@itemList) { &doCanRvalueReference($item); }
 
+print "\n CastVariant_Pointer_RvalueReference canCast =======\n\n";
+foreach my $item (@itemList) { &doCanPointerRvalueReference($item); }
+
+print "\n\n";

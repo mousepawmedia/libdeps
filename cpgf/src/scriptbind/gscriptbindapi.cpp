@@ -6,6 +6,9 @@
 namespace cpgf {
 
 
+// This function is defined in gscriptvalue.cpp internally.
+GScriptValue createScriptValueFromData(const GScriptValueData & data);
+
 // This function is defined in gvariant.cpp, for internal use.
 GVariant createVariantFromData(const GVariantData & data);
 
@@ -62,7 +65,6 @@ gapi_bool G_API_CC ImplScriptConfig::allowAccessClassViaInstance()
 }
 
 
-
 ImplScriptFunction::ImplScriptFunction(GScriptFunction * scriptFunction, bool freeFunction)
 	: scriptFunction(scriptFunction), freeFunction(freeFunction)
 {
@@ -75,7 +77,7 @@ ImplScriptFunction::~ImplScriptFunction()
 	}
 }
 
-void G_API_CC ImplScriptFunction::invoke(GVariantData * outResult, const GVariantData * params, uint32_t paramCount)
+void G_API_CC ImplScriptFunction::invoke(GScriptValueData * outResult, const GVariantData * params, uint32_t paramCount)
 {
 	ENTER_BINDING_API()
 
@@ -90,7 +92,7 @@ void G_API_CC ImplScriptFunction::invoke(GVariantData * outResult, const GVarian
 	LEAVE_BINDING_API()
 }
 
-void G_API_CC ImplScriptFunction::invokeIndirectly(GVariantData * outResult, GVariantData const * const * params, uint32_t paramCount)
+void G_API_CC ImplScriptFunction::invokeIndirectly(GScriptValueData * outResult, GVariantData const * const * params, uint32_t paramCount)
 {
 	ENTER_BINDING_API()
 
@@ -102,12 +104,98 @@ void G_API_CC ImplScriptFunction::invokeIndirectly(GVariantData * outResult, GVa
 		paramIndirect[i] = &paramVariants[i];
 	}
 
-	GVariant result = this->scriptFunction->invokeIndirectly(paramIndirect, paramCount);
+	GScriptValue result = this->scriptFunction->invokeIndirectly(paramIndirect, paramCount);
 	if(outResult) {
 		*outResult = result.takeData();
 	}
 
 	LEAVE_BINDING_API()
+}
+
+void G_API_CC ImplScriptFunction::invokeOnObject(GScriptValueData * outResult, const GVariantData * params, uint32_t paramCount)
+{
+	ENTER_BINDING_API()
+
+	const GVariantData * paramIndirect[REF_MAX_ARITY];
+
+	for(uint32_t i = 0; i < paramCount; ++i) {
+		paramIndirect[i] = &params[i];
+	}
+
+	this->invokeIndirectlyOnObject(outResult, paramIndirect, paramCount);
+
+	LEAVE_BINDING_API()
+}
+
+void G_API_CC ImplScriptFunction::invokeIndirectlyOnObject(GScriptValueData * outResult, GVariantData const * const * params, uint32_t paramCount)
+{
+	ENTER_BINDING_API()
+
+	GVariant paramVariants[REF_MAX_ARITY];
+	const GVariant * paramIndirect[REF_MAX_ARITY];
+
+	for(uint32_t i = 0; i < paramCount; ++i) {
+		paramVariants[i] = createVariantFromData(*params[i]);
+		paramIndirect[i] = &paramVariants[i];
+	}
+
+	GScriptValue result = this->scriptFunction->invokeIndirectlyOnObject(paramIndirect, paramCount);
+	if(outResult) {
+		*outResult = result.takeData();
+	}
+
+	LEAVE_BINDING_API()
+}
+
+// Internal use only!!!
+void G_API_CC ImplScriptFunction::weaken()
+{
+	this->scriptFunction->weaken();
+}
+
+ImplScriptArray::ImplScriptArray(GScriptArray * scriptArray, bool freeArray)
+	: scriptArray(scriptArray), freeArray(freeArray)
+{
+}
+
+ImplScriptArray::~ImplScriptArray()
+{
+	if(this->freeArray) {
+		delete this->scriptArray;
+	}
+}
+
+uint32_t G_API_CC ImplScriptArray::getLength()
+{
+	return (uint32_t)(this->scriptArray->getLength());
+}
+
+void G_API_CC ImplScriptArray::getValue(GScriptValueData * outResult, uint32_t index)
+{
+	GScriptValue value(this->scriptArray->getValue(index));
+	*outResult = value.takeData();
+}
+
+void G_API_CC ImplScriptArray::setValue(uint32_t index, const GScriptValueData * value)
+{
+	GScriptValue scriptValue(createScriptValueFromData(*value));
+	this->scriptArray->setValue(index, scriptValue);
+}
+
+gapi_bool G_API_CC ImplScriptArray::maybeIsScriptArray(uint32_t index)
+{
+	return this->scriptArray->maybeIsScriptArray(index);
+}
+void G_API_CC ImplScriptArray::getAsScriptArray(GScriptValueData * outResult, uint32_t index)
+{
+	GScriptValue value(this->scriptArray->getAsScriptArray(index));
+	*outResult = value.takeData();
+}
+
+void G_API_CC ImplScriptArray::createScriptArray(GScriptValueData * outResult, uint32_t index)
+{
+	GScriptValue value(this->scriptArray->createScriptArray(index));
+	*outResult = value.takeData();
 }
 
 
@@ -123,6 +211,15 @@ ImplScriptObject::~ImplScriptObject()
 	}
 }
 
+IScriptContext * G_API_CC ImplScriptObject::getContext()
+{
+	ENTER_BINDING_API()
+
+	return this->scriptObject->getContext();
+
+	LEAVE_BINDING_API(return nullptr)
+}
+
 IScriptConfig * G_API_CC ImplScriptObject::getConfig()
 {
 	return new ImplScriptConfig(this->scriptObject->getConfig());
@@ -133,14 +230,14 @@ IScriptObject * G_API_CC ImplScriptObject::getOwner()
 	ENTER_BINDING_API()
 
 	GScriptObject * owner = this->scriptObject->getOwner();
-	if(owner == NULL) {
-		return NULL;
+	if(owner == nullptr) {
+		return nullptr;
 	}
 	else {
 		return new ImplScriptObject(owner, false);
 	}
 
-	LEAVE_BINDING_API(return NULL)
+	LEAVE_BINDING_API(return nullptr)
 }
 
 gapi_bool G_API_CC ImplScriptObject::isGlobal()
@@ -158,9 +255,6 @@ void G_API_CC ImplScriptObject::getValue(GScriptValueData * outResult, const cha
 	*outResult = value.takeData();
 }
 
-// This function is defined in gscriptvalue.cpp internally.
-GScriptValue createScriptValueFromData(const GScriptValueData & data);
-
 void G_API_CC ImplScriptObject::setValue(const char * name, const GScriptValueData * value)
 {
 	GScriptValue scriptValue(createScriptValueFromData(*value));
@@ -172,7 +266,7 @@ uint32_t G_API_CC ImplScriptObject::getType(const char * name, IMetaTypedItem **
 	ENTER_BINDING_API()
 
 	GScriptValue value(this->scriptObject->getValue(name));
-	if(outMetaTypeItem != NULL) {
+	if(outMetaTypeItem != nullptr) {
 		*outMetaTypeItem = getTypedItemFromScriptValue(value);
 	}
 	return value.getType();
@@ -276,7 +370,7 @@ IMetaClass * G_API_CC ImplScriptObject::getClass(const char * className)
 
 	return this->scriptObject->getValue(className).toClass();
 
-	LEAVE_BINDING_API(return NULL)
+	LEAVE_BINDING_API(return nullptr)
 }
 
 IMetaEnum * G_API_CC ImplScriptObject::getEnum(const char * enumName)
@@ -285,7 +379,7 @@ IMetaEnum * G_API_CC ImplScriptObject::getEnum(const char * enumName)
 
 	return this->scriptObject->getValue(enumName).toEnum();
 
-	LEAVE_BINDING_API(return NULL)
+	LEAVE_BINDING_API(return nullptr)
 }
 
 void G_API_CC ImplScriptObject::getFundamental(GVariantData * outResult, const char * name)
@@ -305,19 +399,19 @@ char * G_API_CC ImplScriptObject::getString(const char * stringName, IMemoryAllo
 
 	void * cs = allocator->allocate(static_cast<uint32_t>(s.length() + 1));
 	memmove(cs, s.c_str(), s.length() + 1);
-	
+
 	return static_cast<char *>(cs);
 
-	LEAVE_BINDING_API(return NULL)
+	LEAVE_BINDING_API(return nullptr)
 }
 
 void * G_API_CC ImplScriptObject::getObject(const char * objectName)
 {
 	ENTER_BINDING_API()
 
-	return objectAddressFromVariant(this->scriptObject->getValue(objectName).toObject(NULL, NULL));
+	return objectAddressFromVariant(this->scriptObject->getValue(objectName).toObject(nullptr, nullptr));
 
-	LEAVE_BINDING_API(return NULL)
+	LEAVE_BINDING_API(return nullptr)
 }
 
 void G_API_CC ImplScriptObject::getRaw(GVariantData * outResult, const char * name)
@@ -335,7 +429,7 @@ IMetaMethod * G_API_CC ImplScriptObject::getMethod(const char * methodName, void
 
 	return this->scriptObject->getValue(methodName).toMethod(outInstance);
 
-	LEAVE_BINDING_API(return NULL)
+	LEAVE_BINDING_API(return nullptr)
 }
 
 IMetaList * G_API_CC ImplScriptObject::getMethodList(const char * methodName)
@@ -344,7 +438,7 @@ IMetaList * G_API_CC ImplScriptObject::getMethodList(const char * methodName)
 
 	return this->scriptObject->getValue(methodName).toOverloadedMethods();
 
-	LEAVE_BINDING_API(return NULL)
+	LEAVE_BINDING_API(return nullptr)
 }
 
 void G_API_CC ImplScriptObject::createScriptObject(GScriptValueData * outResult, const char * name)
@@ -365,7 +459,7 @@ void G_API_CC ImplScriptObject::getScriptFunction(GScriptValueData * outResult, 
 	LEAVE_BINDING_API()
 }
 
-void G_API_CC ImplScriptObject::invoke(GVariantData * outResult, const char * name, const GVariantData * params, uint32_t paramCount)
+void G_API_CC ImplScriptObject::invoke(GScriptValueData * outResult, const char * name, const GVariantData * params, uint32_t paramCount)
 {
 	ENTER_BINDING_API()
 
@@ -380,7 +474,7 @@ void G_API_CC ImplScriptObject::invoke(GVariantData * outResult, const char * na
 	LEAVE_BINDING_API()
 }
 
-void G_API_CC ImplScriptObject::invokeIndirectly(GVariantData * outResult, const char * name, GVariantData const * const * params, uint32_t paramCount)
+void G_API_CC ImplScriptObject::invokeIndirectly(GScriptValueData * outResult, const char * name, GVariantData const * const * params, uint32_t paramCount)
 {
 	ENTER_BINDING_API()
 
@@ -392,7 +486,7 @@ void G_API_CC ImplScriptObject::invokeIndirectly(GVariantData * outResult, const
 		paramIndirect[i] = &paramVariants[i];
 	}
 
-	GVariant result = this->scriptObject->invokeIndirectly(name, paramIndirect, paramCount);
+	GScriptValue result = this->scriptObject->invokeIndirectly(name, paramIndirect, paramCount);
 	if(outResult) {
 		*outResult = result.takeData();
 	}
@@ -441,6 +535,29 @@ void G_API_CC ImplScriptObject::holdObject(IObject * object)
 	ENTER_BINDING_API()
 
 	this->scriptObject->holdObject(object);
+
+	LEAVE_BINDING_API()
+}
+
+gapi_bool G_API_CC G_API_CC ImplScriptObject::maybeIsScriptArray(const char * name)
+{
+	return !! this->scriptObject->maybeIsScriptArray(name);
+}
+
+void G_API_CC G_API_CC ImplScriptObject::getAsScriptArray(GScriptValueData * outResult, const char * name)
+{
+	ENTER_BINDING_API()
+
+	*outResult = this->scriptObject->getAsScriptArray(name).takeData();
+
+	LEAVE_BINDING_API()
+}
+
+void G_API_CC G_API_CC ImplScriptObject::createScriptArray(GScriptValueData * outResult, const char * name)
+{
+	ENTER_BINDING_API()
+
+	*outResult = this->scriptObject->createScriptArray(name).takeData();
 
 	LEAVE_BINDING_API()
 }

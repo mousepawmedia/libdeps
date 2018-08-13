@@ -15,9 +15,8 @@
 
 namespace cpgf {
 
-size_t abstractParameterIndexBase = 0x1000000;
-
 namespace meta_internal {
+
 
 GMetaDefaultParamList::~GMetaDefaultParamList()
 {
@@ -39,17 +38,43 @@ size_t GMetaDefaultParamList::getDefaultCount() const
 }
 
 size_t GMetaDefaultParamList::loadDefaultParams(
-	const GVariant ** paramBuffer, size_t passedParamCount, size_t prototypeParamCount)
+		const GVariant ** paramBuffer,
+		size_t passedParamCount,
+		size_t prototypeParamCount
+	)
 {
 	if(passedParamCount < prototypeParamCount) {
-		int totalCount = static_cast<int>(this->getDefaultCount());
+		const int totalCount = static_cast<int>(this->getDefaultCount());
 		int startIndex = totalCount - 1;
-		int needCount = static_cast<int>(prototypeParamCount - passedParamCount);
+		const int needCount = static_cast<int>(prototypeParamCount - passedParamCount);
 		if(needCount <= totalCount) {
 			startIndex = needCount - 1;
 		}
 		while(startIndex >= 0) {
 			paramBuffer[passedParamCount] = &this->defaultValueList.at(startIndex);
+			++passedParamCount;
+			--startIndex;
+		}
+	}
+
+	return passedParamCount;
+}
+
+size_t GMetaDefaultParamList::loadDefaultParamsByData(
+		const GVariantData ** paramDataBuffer,
+		size_t passedParamCount,
+		size_t prototypeParamCount
+	)
+{
+	if(passedParamCount < prototypeParamCount) {
+		const int totalCount = static_cast<int>(this->getDefaultCount());
+		int startIndex = totalCount - 1;
+		const int needCount = static_cast<int>(prototypeParamCount - passedParamCount);
+		if(needCount <= totalCount) {
+			startIndex = needCount - 1;
+		}
+		while(startIndex >= 0) {
+			paramDataBuffer[passedParamCount] = &this->defaultValueList.at(startIndex).refData();
 			++passedParamCount;
 			--startIndex;
 		}
@@ -64,7 +89,7 @@ void makeFullName(const GMetaItem * item, std::string * outName, const char * de
 	
 	for(;;) {
 		item = item->getOwnerItem();
-		if(item == NULL) {
+		if(item == nullptr) {
 			break;
 		}
 
@@ -104,9 +129,9 @@ public:
 
 void * newZeroBuffer(void * buffer, size_t size, void * copy)
 {
-	void * result = (buffer == NULL ? new char[size] : buffer);
+	void * result = (buffer == nullptr ? new char[size] : buffer);
 	
-	if(copy == NULL) {
+	if(copy == nullptr) {
 		switch(size) {
 			case 1:
 				*static_cast<uint8_t *>(result) = 0;
@@ -166,12 +191,24 @@ void checkInvokingArity(size_t invokingParamCount, size_t prototypeParamCount, b
 	}
 }
 
+void adjustParamIndex(size_t & index, bool isExplicitThis)
+{
+	if(index >= abstractParameterIndexBase) {
+		index -= abstractParameterIndexBase;
+	}
+	else {
+		if(isExplicitThis) {
+			++index;
+		}
+	}
+}
+
 
 } // namespace meta_internal
 
 
 GMetaItem::GMetaItem(const char * name, const GMetaType & itemType, GMetaCategory category)
-	: implement(new meta_internal::GMetaItemImplement(name, itemType)), modifiers(0), category(category), ownerItem(NULL)
+	: implement(new meta_internal::GMetaItemImplement(name, itemType)), modifiers(0), category(category), ownerItem(nullptr)
 {
 }
 
@@ -182,7 +219,7 @@ GMetaItem::~GMetaItem()
 const GMetaAnnotation * GMetaItem::getAnnotation(const char * name) const
 {
 	if(! this->implement->annotationList) {
-		return NULL;
+		return nullptr;
 	}
 	else {
 		for(size_t i = 0; i < this->implement->annotationList->size(); ++i) {
@@ -191,7 +228,7 @@ const GMetaAnnotation * GMetaItem::getAnnotation(const char * name) const
 			}
 		}
 
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -208,7 +245,7 @@ size_t GMetaItem::getAnnotationCount() const
 const GMetaAnnotation * GMetaItem::getAnnotationAt(size_t index) const
 {
 	if(! this->implement->annotationList) {
-		return NULL;
+		return nullptr;
 	}
 	else {
 		return this->implement->annotationList->at(index);
@@ -246,6 +283,11 @@ const std::string & GMetaItem::getQualifiedName() const
 	return this->implement->qualifiedName;
 }
 
+void GMetaItem::resetQualifiedName() const
+{
+	this->implement->qualifiedName = "";
+}
+
 std::string GMetaItem::makeQualifiedName(const char * delimiter) const
 {
 	std::string result;
@@ -278,11 +320,22 @@ GMetaTypedItem::~GMetaTypedItem()
 
 const GMetaType & GMetaTypedItem::getMetaType() const
 {
-	if(this->implement->itemType.getBaseName() == NULL) {
+	if(this->implement->itemType.getBaseName() == nullptr) {
 		this->implement->itemType = createMetaTypeWithName(this->implement->itemType, this->getQualifiedName().c_str());
 	}
 
 	return this->getItemType();
+}
+
+const std::string & GMetaTypedItem::getQualifiedName() const
+{
+	if(this->implement->qualifiedName.empty()) {
+		this->implement->qualifiedName = makeQualifiedName(".");
+		GMetaTypeData & typeData = this->implement->itemType.refData();
+		typeData.baseName = this->implement->qualifiedName.c_str();
+	}
+
+	return this->implement->qualifiedName;
 }
 
 

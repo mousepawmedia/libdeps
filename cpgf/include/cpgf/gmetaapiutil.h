@@ -1,5 +1,5 @@
-#ifndef __GMETAAPIUTIL_H
-#define __GMETAAPIUTIL_H
+#ifndef CPGF_GMETAAPIUTIL_H
+#define CPGF_GMETAAPIUTIL_H
 
 #include "cpgf/gmetaapi.h"
 #include "cpgf/gmetacommon.h"
@@ -53,6 +53,7 @@ IMetaClass * findAppropriateDerivedClass(const void * instance, IMetaClass * met
 
 void * metaCastToBase(void * instance, IMetaClass * currentClass, IMetaClass * targetBaseClass);
 void * metaCastToDerived(void * instance, IMetaClass * currentClass, IMetaClass * targetDerivedClass);
+void * metaCastAny(void * instance, IMetaClass * fromClass, IMetaClass * toClass);
 
 
 } // namespace cpgf

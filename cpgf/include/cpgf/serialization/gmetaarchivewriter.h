@@ -1,5 +1,5 @@
-#ifndef __GMETAARCHIVEWRITER_H
-#define __GMETAARCHIVEWRITER_H
+#ifndef CPGF_GMETAARCHIVEWRITER_H
+#define CPGF_GMETAARCHIVEWRITER_H
 
 #include "cpgf/serialization/gmetaarchivecommon.h"
 
@@ -106,7 +106,7 @@ void serializeWriteData(IMetaArchiveWriter * archiveWriter, const char * name, c
 template <typename T>
 void serializeWriteData(IMetaArchiveWriter * archiveWriter, const char * name, const T & data) 
 {
-	serializeWriteData(archiveWriter, name, data, NULL);
+	serializeWriteData(archiveWriter, name, data, nullptr);
 }
 
 

@@ -1,9 +1,11 @@
-#ifndef __GPP_H
-#define __GPP_H
+#ifndef CPGF_GPP_H
+#define CPGF_GPP_H
 
 // preprocessor library
 
 #define GPP_EMPTY()
+#define GPP_EMPTY_N(...)
+
 #define GPP_COMMA() ,
 
 #define GPP_STRINGIZE(s) I_GPP_STRINGIZE(s)

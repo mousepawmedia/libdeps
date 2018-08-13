@@ -1,5 +1,5 @@
-#ifndef __GMETAANNOTATION_P_H
-#define __GMETAANNOTATION_P_H
+#ifndef CPGF_GMETAANNOTATION_P_H
+#define CPGF_GMETAANNOTATION_P_H
 
 #include "cpgf/gmetacommon.h"
 
@@ -48,9 +48,7 @@ template <typename T, typename Enabled = void>
 struct InitAnnoVariant
 {
 	static void init(GVariant & var, const T & value) {
-		GVarTypeData data = GVarTypeData();
-		deduceVariantType<T>(data, true);
-		variant_internal::InitVariant<true, typename variant_internal::DeducePassType<T>::PassType>(var, data, value);
+		var = createVariant<T>(value, true);
 	}
 };
 

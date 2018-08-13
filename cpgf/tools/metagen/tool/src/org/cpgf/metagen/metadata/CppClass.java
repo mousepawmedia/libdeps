@@ -187,6 +187,10 @@ public class CppClass extends ParameteredItem {
 			this.getOperatorList().add((Operator)item);
 			break;
 			
+		case Typedef:
+			this.getTypedefList().add((Typedef)item);
+			break;
+
 		default:
 			assert false;
 		}
@@ -248,7 +252,7 @@ public class CppClass extends ParameteredItem {
 	}
 	
 	@Override
-	public void getPolicyRules(List<String> rules) {
+	protected void doGetPolicyRules(List<String> rules) {
 		this.getTraits().getRules(rules);
 	}
 
@@ -317,7 +321,7 @@ public class CppClass extends ParameteredItem {
 	
 	private boolean checkHasTypeConverterConstructor() {
 		for(Constructor c : this.getConstructorList()) {
-			if(c.isPublic() && c.isTypeConverter()) {
+			if(c.isPublic() && c.isTypeConverter() && ! c.isExplicit()) {
 				return true;
 			}
 		}

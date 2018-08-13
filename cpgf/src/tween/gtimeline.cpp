@@ -51,7 +51,7 @@ GTweenNumber GTimeline::getDuration() const
 GTweenNumber GTimeline::append(const GTweenable & tweenable)
 {
 	GTweenNumber duration = 0;
-	TweenableData * data = NULL;
+	TweenableData * data = nullptr;
 	for(ListType::iterator it = this->tweenList.begin(); it != this->tweenList.end(); ++it) {
 		if(it->tweenable == &tweenable) {
 			data = &*it;
@@ -66,7 +66,7 @@ GTweenNumber GTimeline::append(const GTweenable & tweenable)
 		}
 	}
 
-	if(data == NULL) {
+	if(data == nullptr) {
 		raiseCoreException(Error_Tween_TweenableNotOwnedByTimeline);
 	}
 
@@ -80,7 +80,7 @@ GTweenNumber GTimeline::append(const GTweenable & tweenable)
 
 void GTimeline::prepend(const GTweenable & tweenable)
 {
-	TweenableData * data = NULL;
+	TweenableData * data = nullptr;
 	for(ListType::iterator it = this->tweenList.begin(); it != this->tweenList.end(); ++it) {
 		if(it->tweenable == &tweenable) {
 			data = &*it;
@@ -88,7 +88,7 @@ void GTimeline::prepend(const GTweenable & tweenable)
 		}
 	}
 
-	if(data == NULL) {
+	if(data == nullptr) {
 		raiseCoreException(Error_Tween_TweenableNotOwnedByTimeline);
 	}
 
@@ -107,7 +107,7 @@ void GTimeline::prepend(const GTweenable & tweenable)
 
 void GTimeline::insert(GTweenNumber time, const GTweenable & tweenable)
 {
-	TweenableData * data = NULL;
+	TweenableData * data = nullptr;
 	for(ListType::iterator it = this->tweenList.begin(); it != this->tweenList.end(); ++it) {
 		if(it->tweenable == &tweenable) {
 			data = &*it;
@@ -115,7 +115,7 @@ void GTimeline::insert(GTweenNumber time, const GTweenable & tweenable)
 		}
 	}
 
-	if(data == NULL) {
+	if(data == nullptr) {
 		raiseCoreException(Error_Tween_TweenableNotOwnedByTimeline);
 	}
 
@@ -184,7 +184,7 @@ void GTimeline::performTime(GTweenNumber elapsed, GTweenNumber frameDuration, bo
 	GTweenNumber t = elapsed;
 
 	if(this->repeatCount == 0) {
-		if(t > this->durationTime) {
+		if(t >= this->durationTime) {
 			shouldFinish = true;
 			t = this->durationTime;
 		}

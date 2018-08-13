@@ -1,120 +1,129 @@
+MK_DIR = @cmake -E make_directory
+CH_DIR = @cmake -E chdir
+CP = @cmake -E copy
+CP_DIR = @cmake -E copy_directory
+RM = @cmake -E remove
+RM_DIR = @cmake -E remove_directory
+ECHO = @cmake -E echo
+LN = @cmake -E create_symlink
+
 none: help
 
 help:
-	@echo "=== Third-Party Libraries ==="
-	@echo "Select a build target:"
-	@echo "  make ready                  Build everything."
-	@echo
-	@echo "  make cpgf                   Build CPGF."
-	@echo "  make eigen                  Build Eigen."
-	@echo "  make opus                   Build Opus."
-	@echo "  make pugixml                Build pugixml."
-	@echo
-	@echo "  make clean_all              Clean everything."
-	@echo "  make clean_cpgf             Clean CPGF only."
-	@echo "  make clean_eigen            Clean Eigen only."
-	@echo "  make clean_opus             Clean Opus only."
-	@echo "  make clean_pugixml          Clean pugixml only."
-	@echo
-	@echo "  make ubuntu-fix-aclocal     Fix Opus's complaints about problems with aclocal."
-	@echo
-	@echo "For other build options, see the 'make' command in 'cpgf/', 'eigan/', 'opus/', and 'pugixml/'."
+	$(ECHO) "=== Third-Party Libraries ==="
+	$(ECHO) "Select a build target:"
+	$(ECHO) "  make ready                  Build everything."
+	$(ECHO)
+	$(ECHO) "  make cpgf                   Build CPGF."
+	$(ECHO) "  make eigen                  Build Eigen."
+	$(ECHO) "  make opus                   Build Opus."
+	$(ECHO) "  make pugixml                Build pugixml."
+	$(ECHO)
+	$(ECHO) "  make clean_all              Clean everything."
+	$(ECHO) "  make clean_cpgf             Clean CPGF only."
+	$(ECHO) "  make clean_eigen            Clean Eigen only."
+	$(ECHO) "  make clean_opus             Clean Opus only."
+	$(ECHO) "  make clean_pugixml          Clean pugixml only."
+	$(ECHO)
+	$(ECHO) "  make ubuntu-fix-aclocal     Fix Opus's complaints about problems with aclocal."
+	$(ECHO)
+	$(ECHO) "For other build options, see the 'make' command in 'cpgf/', 'eigan/', 'opus/', and 'pugixml/'."
 
 all: ready
 
 ready: cpgf eigen opus pugixml
-	@echo "-------------"
-	@echo "<<<<<<< BUILD COMPLETE >>>>>>>"
-	@echo "All headers are in 'libs/include' and static libraries in 'libs/lib'."
-	@echo "-------------"
+	$(ECHO) "-------------"
+	$(ECHO) "<<<<<<< BUILD COMPLETE >>>>>>>"
+	$(ECHO) "All headers are in 'libs/include' and static libraries in 'libs/lib'."
+	$(ECHO) "-------------"
 
 clean_all: clean_cpgf clean_eigen clean_opus clean_pugixml
-	@rm -rf libs/
-	@echo "-------------"
-	@echo "<<<<<<< CLEAN COMPLETE: ALL >>>>>>>"
-	@echo "-------------"
+	$(RM_DIR) libs/
+	$(ECHO) "-------------"
+	$(ECHO) "<<<<<<< CLEAN COMPLETE: ALL >>>>>>>"
+	$(ECHO) "-------------"
 
 clean_cpgf:
 	$(MAKE) clean -C cpgf/build
-	@rm -rf libs/include/cpgf
-	@rm -f libs/lib/libcpgf*
-	@echo "-------------"
-	@echo "<<<<<<< CLEAN COMPLETE: CPGF >>>>>>>"
-	@echo "-------------"
+	$(RM_DIR) libs/include/cpgf
+	$(RM) libs/lib/libcpgf*
+	$(ECHO) "-------------"
+	$(ECHO) "<<<<<<< CLEAN COMPLETE: CPGF >>>>>>>"
+	$(ECHO) "-------------"
 
 clean_eigen:
-	@rm -rf libs/include/Eigen
-	@echo "-------------"
-	@echo "<<<<<<< CLEAN COMPLETE: EIGEN >>>>>>>"
-	@echo "-------------"
+	$(RM_DIR) libs/include/Eigen
+	$(ECHO) "-------------"
+	$(ECHO) "<<<<<<< CLEAN COMPLETE: EIGEN >>>>>>>"
+	$(ECHO) "-------------"
 
 clean_opus:
 	$(MAKE) clean -C opus
-	@rm -rf libs/include/opus
-	@rm -f libs/lib/libopus*
-	@echo "-------------"
-	@echo "<<<<<<< CLEAN COMPLETE: OPUS >>>>>>>"
-	@echo "-------------"
+	$(RM_DIR) libs/include/opus
+	$(RM) libs/lib/libopus*
+	$(ECHO) "-------------"
+	$(ECHO) "<<<<<<< CLEAN COMPLETE: OPUS >>>>>>>"
+	$(ECHO) "-------------"
 
 clean_pugixml:
-	@rm -rf pugixml/build
-	@rm -rf libs/include/pugixml
-	@rm -f libs/lib/libpugixml*
-	@echo "-------------"
-	@echo "<<<<<<< CLEAN COMPLETE: PUGIXML >>>>>>>"
-	@echo "-------------"
+	$(RM_DIR) pugixml/build
+	$(RM_DIR) libs/include/pugixml
+	$(RM) libs/lib/libpugixml*
+	$(ECHO) "-------------"
+	$(ECHO) "<<<<<<< CLEAN COMPLETE: PUGIXML >>>>>>>"
+	$(ECHO) "-------------"
 
 cpgf:
-	@echo "Building CPGF..."
+	$(ECHO) "Building CPGF..."
 	$(MAKE) linux -C cpgf/build
-	@echo "Copying CPGF..."
-	@mkdir -p libs/lib
-	@cp -r cpgf/include libs/
-	@mkdir -p libs/lib
-	@cp -r cpgf/lib libs/
-	@echo "-------------"
-	@echo "<<<<<<< BUILD COMPLETE: CPGF >>>>>>>"
-	@echo "CPGF is in 'libs/include/cpgf' and 'libs/lib'."
-	@echo "-------------"
+	$(ECHO) "Copying CPGF..."
+	$(MK_DIR) libs/lib
+	$(CP_DIR) cpgf/include libs/
+	$(MK_DIR) libs/lib
+	$(CP_DIR) cpgf/lib libs/
+	$(ECHO) "-------------"
+	$(ECHO) "<<<<<<< BUILD COMPLETE: CPGF >>>>>>>"
+	$(ECHO) "CPGF is in 'libs/include/cpgf' and 'libs/lib'."
+	$(ECHO) "-------------"
 
 eigen:
-	@echo "Copying Eigen..."
-	@mkdir -p libs/include/Eigen
-	@cp -r eigen/Eigen libs/include
-	@echo "-------------"
-	@echo "<<<<<<< BUILD COMPLETE: EIGEN >>>>>>>"
-	@echo "Compiled with EIGEN_MPL2_ONLY flag."
-	@echo "Eigen is in 'libs/include/eigen'."
-	@echo "-------------"
+	$(ECHO) "Copying Eigen..."
+	$(MK_DIR) libs/include/Eigen
+	$(CP_DIR) eigen/Eigen libs/include
+	$(ECHO) "-------------"
+	$(ECHO) "<<<<<<< BUILD COMPLETE: EIGEN >>>>>>>"
+	$(ECHO) "Compiled with EIGEN_MPL2_ONLY flag."
+	$(ECHO) "Eigen is in 'libs/include/eigen'."
+	$(ECHO) "-------------"
 
 opus:
-	@echo "Building opus..."
-	@cd opus && ./configure
+	$(ECHO) "Building opus..."
+	$(CH_DIR) opus && ./configure
 	$(MAKE) -C opus
-	@echo "Copying opus..."
-	@mkdir -p libs/include/opus
-	@cp opus/include/* libs/include/opus
-	@mkdir -p libs/lib
-	@cp opus/.libs/libopus* libs/lib
-	@echo "-------------"
-	@echo "<<<<<<< BUILD COMPLETE: OPUS >>>>>>>"
-	@echo "Opus is in 'libs/include/opus' and 'libs/lib'."
-	@echo "-------------"
+	$(ECHO) "Copying opus..."
+	$(MK_DIR) libs/include/opus
+	$(CP) opus/include/* libs/include/opus
+	$(MK_DIR) libs/lib
+	$(CP) opus/.libs/libopus* libs/lib
+	$(ECHO) "-------------"
+	$(ECHO) "<<<<<<< BUILD COMPLETE: OPUS >>>>>>>"
+	$(ECHO) "Opus is in 'libs/include/opus' and 'libs/lib'."
+	$(ECHO) "-------------"
 
 pugixml:
-	@echo "Building pugixml..."
-	@mkdir -p pugixml/build
-	@cd pugixml/build && cmake ../
+	$(ECHO) "Building pugixml..."
+	$(MK_DIR) pugixml/build
+	$(CH_DIR) pugixml/build && cmake ../
 	$(MAKE) -C pugixml/build
-	@echo "Copying pugixml..."
-	@mkdir -p libs/include/pugixml
-	@cp pugixml/src/*.hpp libs/include/pugixml
-	@mkdir -p libs/lib
-	@cp pugixml/build/libpugixml* libs/lib
-	@echo "-------------"
-	@echo "<<<<<<< BUILD COMPLETE: PUGIXML >>>>>>>"
-	@echo "pugixml is in 'libs/include/pugixml' and 'libs/lib'."
-	@echo "-------------"
+	$(ECHO) "Copying pugixml..."
+	$(MK_DIR) libs/include/pugixml
+	$(CP) pugixml/src/*.hpp libs/include/pugixml
+	$(MK_DIR) libs/lib
+	$(CP) pugixml/build/libpugixml* libs/lib
+	$(ECHO) "-------------"
+	$(ECHO) "<<<<<<< BUILD COMPLETE: PUGIXML >>>>>>>"
+	$(ECHO) "pugixml is in 'libs/include/pugixml' and 'libs/lib'."
+	$(ECHO) "-------------"
 
 ubuntu-fix-aclocal:
 	@sh preconfig/ubuntu-fix-aclocal.sh

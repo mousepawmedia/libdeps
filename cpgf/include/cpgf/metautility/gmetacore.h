@@ -1,5 +1,5 @@
-#ifndef __GMETACORE_H
-#define __GMETACORE_H
+#ifndef CPGF_GMETACORE_H
+#define CPGF_GMETACORE_H
 
 #include "cpgf/gvariant.h"
 
@@ -14,7 +14,7 @@ class GMetaCore
 public:
 	explicit GMetaCore(GScriptObject * scriptObject);
 	IMetaClass * cloneClass(IMetaClass * metaClass);
-	GVariant cast(const GVariant & instance, IMetaClass * targetMetaClass = NULL);
+	GVariant cast(const GVariant & instance, IMetaClass * targetMetaClass = nullptr);
 
 private:
 	GScriptObject * scriptObject;

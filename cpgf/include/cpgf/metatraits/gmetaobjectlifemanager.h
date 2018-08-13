@@ -1,5 +1,5 @@
-#ifndef __GMETAOBJECTLIFEMANAGER_H
-#define __GMETAOBJECTLIFEMANAGER_H
+#ifndef CPGF_GMETAOBJECTLIFEMANAGER_H
+#define CPGF_GMETAOBJECTLIFEMANAGER_H
 
 #include "cpgf/gapi.h"
 
@@ -34,7 +34,7 @@ template <typename T, typename Enabled = void>
 struct GMetaTraitsCreateObjectLifeManager
 {
 	static IMetaObjectLifeManager * createObjectLifeManager(const GMetaTraitsParam &) {
-		return NULL;
+		return nullptr;
 	}
 };
 
@@ -42,7 +42,7 @@ template <typename T>
 IMetaObjectLifeManager * createObjectLifeManagerFromMetaTraits(const GMetaTraitsParam & param, T *)
 {
 	IMetaObjectLifeManager * objectLifeManager = GMetaTraitsCreateObjectLifeManager<T>::createObjectLifeManager(param);
-	if(objectLifeManager == NULL) {
+	if(objectLifeManager == nullptr) {
 		objectLifeManager = metatraits_internal::createDefaultObjectLifeManagerFromMetaTraits();
 	}
 	return objectLifeManager;

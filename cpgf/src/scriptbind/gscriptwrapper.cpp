@@ -8,7 +8,7 @@ namespace cpgf {
 
 
 GScriptWrapper::GScriptWrapper()
-	: scriptDataStorage(NULL)
+	: scriptDataStorage(nullptr)
 {
 }
 
@@ -18,16 +18,13 @@ IScriptFunction * GScriptWrapper::getScriptFunction(const char * name) const
 		return const_cast<IScriptDataStorage *>(this->scriptDataStorage.get())->getScriptFunction(name);
 	}
 	else {
-		return NULL;
+		return nullptr;
 	}
 }
 
 void GScriptWrapper::setScriptDataStorage(IScriptDataStorage * scriptDataStorage)
 {
-	// Only set if it doesn't exist. Thus we keep the storage universal.
-	if(! this->scriptDataStorage) {
-		this->scriptDataStorage.reset(scriptDataStorage);
-	}
+	this->scriptDataStorage.reset(scriptDataStorage);
 }
 
 
@@ -40,7 +37,7 @@ class GMetaScriptWrapper : public IMetaScriptWrapper
 public:
 	explicit GMetaScriptWrapper(CasterType caster) : caster(caster) {
 	}
-	
+
 	virtual ~GMetaScriptWrapper() {
 	}
 
