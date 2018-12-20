@@ -3,6 +3,10 @@
 *.exe
 **/bin
 **/obj
+.env
+.pk
+.pem
+.pub
 *.depend
 *.layout
 **/build_temp
