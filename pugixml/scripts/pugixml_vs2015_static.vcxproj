@@ -70,23 +70,23 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>vs2015\$(Platform)_$(Configuration)\</OutDir>
-    <IntDir>vs2015\$(Platform)_$(Configuration)\</IntDir>
+    <OutDir>vs2015\$(Platform)_$(Configuration)Static\</OutDir>
+    <IntDir>vs2015\$(Platform)_$(Configuration)Static\</IntDir>
     <TargetName>pugixml</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>vs2015\$(Platform)_$(Configuration)\</OutDir>
-    <IntDir>vs2015\$(Platform)_$(Configuration)\</IntDir>
+    <OutDir>vs2015\$(Platform)_$(Configuration)Static\</OutDir>
+    <IntDir>vs2015\$(Platform)_$(Configuration)Static\</IntDir>
     <TargetName>pugixml</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>vs2015\$(Platform)_$(Configuration)\</OutDir>
-    <IntDir>vs2015\$(Platform)_$(Configuration)\</IntDir>
+    <OutDir>vs2015\$(Platform)_$(Configuration)Static\</OutDir>
+    <IntDir>vs2015\$(Platform)_$(Configuration)Static\</IntDir>
     <TargetName>pugixml</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>vs2015\$(Platform)_$(Configuration)\</OutDir>
-    <IntDir>vs2015\$(Platform)_$(Configuration)\</IntDir>
+    <OutDir>vs2015\$(Platform)_$(Configuration)Static\</OutDir>
+    <IntDir>vs2015\$(Platform)_$(Configuration)Static\</IntDir>
     <TargetName>pugixml</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -99,6 +99,7 @@
       <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -115,6 +116,7 @@
       <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -132,6 +134,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -151,6 +154,7 @@
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
