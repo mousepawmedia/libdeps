@@ -36,7 +36,6 @@ void jacobisvd(const MatrixType& a = MatrixType(), bool pickrandom = true)
 template<typename MatrixType> void jacobisvd_verify_assert(const MatrixType& m)
 {
   svd_verify_assert<JacobiSVD<MatrixType> >(m);
-  typedef typename MatrixType::Index Index;
   Index rows = m.rows();
   Index cols = m.cols();
 
@@ -70,6 +69,21 @@ void jacobisvd_method()
   VERIFY_IS_APPROX(m.jacobiSvd(ComputeFullU|ComputeFullV).solve(m), m);
 }
 
+namespace Foo {
+// older compiler require a default constructor for Bar
+// cf: https://stackoverflow.com/questions/7411515/
+class Bar {public: Bar() {}};
+bool operator<(const Bar&, const Bar&) { return true; }
+}
+// regression test for a very strange MSVC issue for which simply
+// including SVDBase.h messes up with std::max and custom scalar type
+void msvc_workaround()
+{
+  const Foo::Bar a;
+  const Foo::Bar b;
+  std::max EIGEN_NOT_A_MACRO (a,b);
+}
+
 void test_jacobisvd()
 {
   CALL_SUBTEST_3(( jacobisvd_verify_assert(Matrix3f()) ));
@@ -101,6 +115,12 @@ void test_jacobisvd()
     // Test on inf/nan matrix
     CALL_SUBTEST_7(  (svd_inf_nan<JacobiSVD<MatrixXf>, MatrixXf>()) );
     CALL_SUBTEST_10( (svd_inf_nan<JacobiSVD<MatrixXd>, MatrixXd>()) );
+
+    // bug1395 test compile-time vectors as input
+    CALL_SUBTEST_13(( jacobisvd_verify_assert(Matrix<double,6,1>()) ));
+    CALL_SUBTEST_13(( jacobisvd_verify_assert(Matrix<double,1,6>()) ));
+    CALL_SUBTEST_13(( jacobisvd_verify_assert(Matrix<double,Dynamic,1>(r)) ));
+    CALL_SUBTEST_13(( jacobisvd_verify_assert(Matrix<double,1,Dynamic>(c)) ));
   }
 
   CALL_SUBTEST_7(( jacobisvd<MatrixXf>(MatrixXf(internal::random<int>(EIGEN_TEST_MAX_SIZE/4, EIGEN_TEST_MAX_SIZE/2), internal::random<int>(EIGEN_TEST_MAX_SIZE/4, EIGEN_TEST_MAX_SIZE/2))) ));
@@ -117,4 +137,6 @@ void test_jacobisvd()
   CALL_SUBTEST_9( svd_preallocate<void>() );
 
   CALL_SUBTEST_2( svd_underoverflow<void>() );
+
+  msvc_workaround();
 }

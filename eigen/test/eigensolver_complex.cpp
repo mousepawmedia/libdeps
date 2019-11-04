@@ -71,7 +71,6 @@ void verify_is_approx_upto_permutation(const VectorType& vec1, const VectorType&
 
 template<typename MatrixType> void eigensolver(const MatrixType& m)
 {
-  typedef typename MatrixType::Index Index;
   /* this test covers the following files:
      ComplexEigenSolver.h, and indirectly ComplexSchur.h
   */
@@ -130,6 +129,15 @@ template<typename MatrixType> void eigensolver(const MatrixType& m)
   {
     ComplexEigenSolver<MatrixType> eig(a.adjoint() * a);
     eig.compute(a.adjoint() * a);
+  }
+
+  // regression test for bug 478
+  {
+    a.setZero();
+    ComplexEigenSolver<MatrixType> ei3(a);
+    VERIFY_IS_EQUAL(ei3.info(), Success);
+    VERIFY_IS_MUCH_SMALLER_THAN(ei3.eigenvalues().norm(),RealScalar(1));
+    VERIFY((ei3.eigenvectors().transpose()*ei3.eigenvectors().transpose()).eval().isIdentity());
   }
 }
 

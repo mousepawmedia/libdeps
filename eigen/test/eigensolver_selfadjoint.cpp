@@ -68,7 +68,6 @@ template<typename MatrixType> void selfadjointeigensolver_essential_check(const 
 
 template<typename MatrixType> void selfadjointeigensolver(const MatrixType& m)
 {
-  typedef typename MatrixType::Index Index;
   /* this test covers the following files:
      EigenSolver.h, SelfAdjointEigenSolver.h (and indirectly: Tridiagonalization.h)
   */
@@ -179,6 +178,15 @@ template<typename MatrixType> void selfadjointeigensolver(const MatrixType& m)
   {
     SelfAdjointEigenSolver<MatrixType> eig(a.adjoint() * a);
     eig.compute(a.adjoint() * a);
+  }
+
+  // regression test for bug 478
+  {
+    a.setZero();
+    SelfAdjointEigenSolver<MatrixType> ei3(a);
+    VERIFY_IS_EQUAL(ei3.info(), Success);
+    VERIFY_IS_MUCH_SMALLER_THAN(ei3.eigenvalues().norm(),RealScalar(1));
+    VERIFY((ei3.eigenvectors().transpose()*ei3.eigenvectors().transpose()).eval().isIdentity());
   }
 }
 
