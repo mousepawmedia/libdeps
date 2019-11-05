@@ -16,12 +16,14 @@ help:
 	$(ECHO)
 	$(ECHO) "  make cpgf                   Build CPGF."
 	$(ECHO) "  make eigen                  Build Eigen."
+	$(ECHO) "  make eventpp                Build eventpp."
 	$(ECHO) "  make opus                   Build Opus."
 	$(ECHO) "  make pugixml                Build pugixml."
 	$(ECHO)
 	$(ECHO) "  make clean_all              Clean everything."
 	$(ECHO) "  make clean_cpgf             Clean CPGF only."
 	$(ECHO) "  make clean_eigen            Clean Eigen only."
+	$(ECHO) "  make clean_eventpp          Clean eventpp only."
 	$(ECHO) "  make clean_opus             Clean Opus only."
 	$(ECHO) "  make clean_pugixml          Clean pugixml only."
 	$(ECHO)
@@ -31,13 +33,13 @@ help:
 
 all: ready
 
-ready: cpgf eigen opus pugixml
+ready: cpgf eigen eventpp opus pugixml
 	$(ECHO) "-------------"
 	$(ECHO) "<<<<<<< BUILD COMPLETE >>>>>>>"
 	$(ECHO) "All headers are in 'libs/include' and static libraries in 'libs/lib'."
 	$(ECHO) "-------------"
 
-clean_all: clean_cpgf clean_eigen clean_opus clean_pugixml
+clean_all: clean_cpgf clean_eigen clean_eventpp clean_opus clean_pugixml
 	$(RM_DIR) libs/
 	$(ECHO) "-------------"
 	$(ECHO) "<<<<<<< CLEAN COMPLETE: ALL >>>>>>>"
@@ -55,6 +57,12 @@ clean_eigen:
 	$(RM_DIR) libs/include/Eigen
 	$(ECHO) "-------------"
 	$(ECHO) "<<<<<<< CLEAN COMPLETE: EIGEN >>>>>>>"
+	$(ECHO) "-------------"
+
+clean_eventpp:
+	$(RM_DIR) libs/include/eventpp
+	$(ECHO) "-------------"
+	$(ECHO) "<<<<<<< CLEAN COMPLETE: EVENTPP >>>>>>>"
 	$(ECHO) "-------------"
 
 clean_opus:
@@ -96,6 +104,15 @@ eigen:
 	$(ECHO) "Eigen is in 'libs/include/eigen'."
 	$(ECHO) "-------------"
 
+eventpp:
+	$(ECHO) "Copying eventpp..."
+	$(MK_DIR) libs/include
+	$(CP_DIR) eventpp/include/eventpp/ libs/include/eventpp/
+	$(ECHO) "-------------"
+	$(ECHO) "<<<<<<< BUILD COMPLETE: EVENTPP >>>>>>>"
+	$(ECHO) "eventpp is in 'libs/include/eventpp'."
+	$(ECHO) "-------------"
+
 opus:
 	$(ECHO) "Building opus..."
 	$(CH_DIR) opus ./configure
@@ -128,4 +145,4 @@ pugixml:
 ubuntu-fix-aclocal:
 	@sh preconfig/ubuntu-fix-aclocal.sh
 
-.PHONY: all clean_all clean_eigen clean_opus clean_pugixml cpgf eigen opus pugixml ubuntu-fix-aclocal
+.PHONY: all clean_all clean_eigen clean_eventpp clean_opus clean_pugixml cpgf eigen eventpp opus pugixml ubuntu-fix-aclocal

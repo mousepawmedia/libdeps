@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 1.2.0 [2019-11-04]
+
+* Eigen 3.3.7 (2019-11-12): From source tarball.
+
+* eventpp (2019-05-28): From GitHub `master` branch.
+
+* pugixml 1.10 (2019-09-15): From source tarball.
+
 ## 1.1.0 [2018-08-13]
 
 * CPGF 1.6.0 (2017-03-24): From GitHub, w/ modifications:
