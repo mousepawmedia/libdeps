@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.1 [2019-12-13]
+
+* eventpp 0.1.1 (2019-12-13): From GitHub `v0.1.1` tag.
+
 ## 1.2.0 [2019-11-04]
 
 * Eigen 3.3.7 (2019-11-12): From source tarball.
