@@ -20,3 +20,8 @@
 !**/extlibs
 !**/extlibs/**
 codealike.json
+opus/Makefile
+opus/config.log
+opus/config.status
+opus/doc/Makefile
+opus/libtool
