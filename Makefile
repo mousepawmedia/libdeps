@@ -14,14 +14,12 @@ help:
 	$(ECHO) "Select a build target:"
 	$(ECHO) "  make ready                  Build everything."
 	$(ECHO)
-	$(ECHO) "  make cpgf                   Build CPGF."
 	$(ECHO) "  make eigen                  Build Eigen."
 	$(ECHO) "  make eventpp                Build eventpp."
 	$(ECHO) "  make opus                   Build Opus."
 	$(ECHO) "  make pugixml                Build pugixml."
 	$(ECHO)
 	$(ECHO) "  make clean_all              Clean everything."
-	$(ECHO) "  make clean_cpgf             Clean CPGF only."
 	$(ECHO) "  make clean_eigen            Clean Eigen only."
 	$(ECHO) "  make clean_eventpp          Clean eventpp only."
 	$(ECHO) "  make clean_opus             Clean Opus only."
@@ -29,28 +27,20 @@ help:
 	$(ECHO)
 	$(ECHO) "  make ubuntu-fix-aclocal     Fix Opus's complaints about problems with aclocal."
 	$(ECHO)
-	$(ECHO) "For other build options, see the 'make' command in 'cpgf/', 'eigan/', 'opus/', and 'pugixml/'."
+	$(ECHO) "For other build options, see the 'make' command in 'eigan/', 'opus/', and 'pugixml/'."
 
 all: ready
 
-ready: cpgf eigen eventpp opus pugixml
+ready: eigen eventpp opus pugixml
 	$(ECHO) "-------------"
 	$(ECHO) "<<<<<<< BUILD COMPLETE >>>>>>>"
 	$(ECHO) "All headers are in 'libs/include' and static libraries in 'libs/lib'."
 	$(ECHO) "-------------"
 
-clean_all: clean_cpgf clean_eigen clean_eventpp clean_opus clean_pugixml
+clean_all: clean_eigen clean_eventpp clean_opus clean_pugixml
 	$(RM_DIR) libs/
 	$(ECHO) "-------------"
 	$(ECHO) "<<<<<<< CLEAN COMPLETE: ALL >>>>>>>"
-	$(ECHO) "-------------"
-
-clean_cpgf:
-	$(MAKE) clean -C cpgf/build
-	$(RM_DIR) libs/include/cpgf
-	$(RM) libs/lib/libcpgf*
-	$(ECHO) "-------------"
-	$(ECHO) "<<<<<<< CLEAN COMPLETE: CPGF >>>>>>>"
 	$(ECHO) "-------------"
 
 clean_eigen:
@@ -79,19 +69,6 @@ clean_pugixml:
 	$(RM) libs/lib/libpugixml*
 	$(ECHO) "-------------"
 	$(ECHO) "<<<<<<< CLEAN COMPLETE: PUGIXML >>>>>>>"
-	$(ECHO) "-------------"
-
-cpgf:
-	$(ECHO) "Building CPGF..."
-	$(MAKE) linux -C cpgf/build
-	$(ECHO) "Copying CPGF..."
-	$(MK_DIR) libs/lib
-	$(CP_DIR) cpgf/include/ libs/include/
-	$(MK_DIR) libs/lib
-	$(CP_DIR) cpgf/lib/ libs/lib/
-	$(ECHO) "-------------"
-	$(ECHO) "<<<<<<< BUILD COMPLETE: CPGF >>>>>>>"
-	$(ECHO) "CPGF is in 'libs/include/cpgf' and 'libs/lib'."
 	$(ECHO) "-------------"
 
 eigen:
@@ -145,4 +122,4 @@ pugixml:
 ubuntu-fix-aclocal:
 	@sh preconfig/ubuntu-fix-aclocal.sh
 
-.PHONY: all clean_all clean_eigen clean_eventpp clean_opus clean_pugixml cpgf eigen eventpp opus pugixml ubuntu-fix-aclocal
+.PHONY: all clean_all clean_eigen clean_eventpp clean_opus clean_pugixml eigen eventpp opus pugixml ubuntu-fix-aclocal
