@@ -1,4 +1,5 @@
 {
+	"history.immutable" : true,
 	"phabricator.uri" : "https://phabricator.mousepawmedia.net",
 	"repository.callsign" : "LIB",
 	"load" : [
